@@ -4,7 +4,8 @@ import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 
 const Home = () => {
   const [walletAddress, setWalletAddress] = useState();
-
+  const [gobMethod, setGOBMethod] = useState(null);
+  
   const login = async () => {
     try{
       const gaslessWalletConfig = { apikey: process.env.NEXT_PUBLIC_GASLESSWALLET_KEY };
@@ -21,6 +22,7 @@ const Home = () => {
       );
 
       await gaslessOnboarding.init();
+      setGOBMethod(gaslessOnboarding);
 
       const web3AuthProvider = await gaslessOnboarding.login();
       console.log("web3AuthProvider", web3AuthProvider);
@@ -33,11 +35,17 @@ const Home = () => {
     }
   }
 
+  const logout = async () => {
+    await gobMethod.logout();
+  }
+
+
   return (
     <div>
       <h1>Wallet as Desktop App</h1>   
       <button onClick={login}>login</button>
       {walletAddress && <p>{walletAddress}</p>}
+      {walletAddress && <button onClick={logout}>logout</button>}
     </div>
   )
 }
