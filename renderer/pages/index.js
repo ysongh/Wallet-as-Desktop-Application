@@ -9,14 +9,11 @@ const Home = () => {
     try{
       const gaslessWalletConfig = { apikey: process.env.NEXT_PUBLIC_GASLESSWALLET_KEY };
       const loginConfig = {
-        domains: ["window.location.origin"],
+        domains: [window.location.origin],
         chain: {
           id: 5,
           rpcUrl: process.env.NEXT_PUBLIC_RPC,
-        },
-        openLogin: {
-          redirectUrl: `window.location.origin`,
-        },
+        }
       };
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig,
