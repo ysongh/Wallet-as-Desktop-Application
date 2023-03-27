@@ -1,46 +1,48 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+
+import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 
 const Home = () => {
-  const [input, setInput] = useState('')
-  const [message, setMessage] = useState(null)
+  const [walletAddress, setWalletAddress] = useState();
 
-  useEffect(() => {
-    const handleMessage = (event, message) => setMessage(message)
-    window.electron.message.on(handleMessage)
+  const login = async () => {
+    try{
+      const gaslessWalletConfig = { apikey: process.env.NEXT_PUBLIC_GASLESSWALLET_KEY };
+      const loginConfig = {
+        domains: ["window.location.origin"],
+        chain: {
+          id: 5,
+          rpcUrl: process.env.NEXT_PUBLIC_RPC,
+        },
+        openLogin: {
+          redirectUrl: `window.location.origin`,
+        },
+      };
+      const gaslessOnboarding = new GaslessOnboarding(
+        loginConfig,
+        gaslessWalletConfig
+      );
 
-    return () => {
-      window.electron.message.off(handleMessage)
+      await gaslessOnboarding.init();
+
+      const web3AuthProvider = await gaslessOnboarding.login();
+      console.log("web3AuthProvider", web3AuthProvider);
+
+      const gaslessWallet = gaslessOnboarding.getGaslessWallet()
+      setWalletAddress(gaslessWallet.getAddress())
     }
-  }, [])
-
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    window.electron.message.send(input)
-    setMessage(null)
+    catch(error){
+      console.log(error);
+    }
   }
 
   return (
     <div>
-      <h1>Hello Electron!</h1>
-
-      {message && <p>{message}</p>}
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </form>
-
-      <style jsx>{`
-        h1 {
-          color: red;
-          font-size: 50px;
-        }
-      `}</style>
+      <h1>Wallet as Desktop App</h1>   
+      <button onClick={login}>login</button>
+      {walletAddress && <p>{walletAddress}</p>}
     </div>
   )
 }
 
-export default Home
+export default Home;

@@ -26,6 +26,7 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
+    "@gelatonetwork/gasless-onboarding": "^0.0.3",
     "electron-is-dev": "^1.1.0",
     "electron-next": "^3.1.5"
   }
