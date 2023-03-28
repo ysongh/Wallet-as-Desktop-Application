@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
 
 import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 import { GASLESSWALLET_KEY, RPC } from '../keys';
 
 const Home = () => {
   const [walletAddress, setWalletAddress] = useState();
+  const [balance, setBalance] = useState();
   const [gobMethod, setGOBMethod] = useState(null);
   
   const login = async () => {
@@ -30,8 +32,14 @@ const Home = () => {
       const web3AuthProvider = await gaslessOnboarding.login();
       console.log("web3AuthProvider", web3AuthProvider);
 
-      const gaslessWallet = gaslessOnboarding.getGaslessWallet()
-      setWalletAddress(gaslessWallet.getAddress())
+      const gaslessWallet = gaslessOnboarding.getGaslessWallet();
+      setWalletAddress(gaslessWallet.getAddress());
+
+      const signer = new ethers.providers.Web3Provider(web3AuthProvider);
+      console.log(signer);
+
+      const balance = await signer.getBalance(gaslessWallet.getAddress());
+      setBalance(balance.toString());
     }
     catch(error){
       console.log(error);
@@ -48,6 +56,7 @@ const Home = () => {
       <h1>Wallet as Desktop App</h1>   
       <button onClick={login}>login</button>
       {walletAddress && <p>{walletAddress}</p>}
+      <p>{balance / 10 ** 18} MATIC</p>
       {walletAddress && <button onClick={logout}>logout</button>}
     </div>
   )
