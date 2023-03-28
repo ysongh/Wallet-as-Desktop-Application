@@ -2,7 +2,7 @@
   "name": "wallet-as-desktop-application",
   "version": "0.1.0",
   "private": true,
-  "productName": "ElectronNext",
+  "productName": "Wallet as Desktop Application",
   "main": "main/index.js",
   "scripts": {
     "clean": "rimraf dist renderer/.next renderer/out",
