@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
+import { GASLESSWALLET_KEY, RPC } from '../keys';
 
 const Home = () => {
   const [walletAddress, setWalletAddress] = useState();
@@ -8,12 +9,12 @@ const Home = () => {
   
   const login = async () => {
     try{
-      const gaslessWalletConfig = { apikey: process.env.NEXT_PUBLIC_GASLESSWALLET_KEY };
+      const gaslessWalletConfig = { apikey: GASLESSWALLET_KEY };
       const loginConfig = {
         domains: [window.location.origin],
         chain: {
           id: 5,
-          rpcUrl: process.env.NEXT_PUBLIC_RPC,
+          rpcUrl: RPC,
         }
       };
       const gaslessOnboarding = new GaslessOnboarding(
