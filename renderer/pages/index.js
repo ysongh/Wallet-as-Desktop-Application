@@ -9,7 +9,7 @@ const Home = () => {
   
   const login = async () => {
     try{
-      const gaslessWalletConfig = { apikey: GASLESSWALLET_KEY };
+      const gaslessWalletConfig = { apiKey: GASLESSWALLET_KEY };
       const loginConfig = {
         domains: [window.location.origin],
         chain: {
