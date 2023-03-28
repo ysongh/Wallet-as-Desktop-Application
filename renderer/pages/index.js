@@ -13,8 +13,10 @@ const Home = () => {
       const loginConfig = {
         domains: [window.location.origin],
         chain: {
-          id: 5,
-          rpcUrl: RPC,
+          // id: 5,
+          // rpcUrl: RPC,
+          id: 80001,
+          rpcUrl: "https://rpc-mumbai.maticvigil.com/",
         }
       };
       const gaslessOnboarding = new GaslessOnboarding(
