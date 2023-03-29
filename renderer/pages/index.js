@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { Button, Typography } from 'antd';
 import { ethers } from 'ethers';
 
 // import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 // import { GASLESSWALLET_KEY, RPC } from '../keys';
 
+import 'antd/dist/reset.css';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 import { WEB3AUTH_CLIENT_ID, RPC } from '../keys';
 
@@ -115,12 +117,16 @@ const Home = () => {
 
 
   return (
-    <div>
-      <h1>Wallet as Desktop App</h1>   
-      <button onClick={login}>login</button>
+    <div style={{ padding: "1rem" }}>
+      <Typography.Title level={2}>Wallet as Desktop App</Typography.Title>   
+      <Button onClick={login} type="primary">
+        login
+      </Button>
+      <br />
+      <br />
       {walletAddress && <p>{walletAddress}</p>}
       <p>{balance / 10 ** 18} MATIC</p>
-      {walletAddress && <button onClick={logout}>logout</button>}
+      {walletAddress && <Button onClick={logout} type="primary">logout</Button>}
     </div>
   )
 }
