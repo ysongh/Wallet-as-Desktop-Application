@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Typography } from 'antd';
+import { Button, Input, Typography } from 'antd';
 import { ethers } from 'ethers';
 
 // import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
@@ -17,6 +17,10 @@ const Home = () => {
   );
   const [safeAuth, setSafeAuth] = useState();
   const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
+  
+  const [to, setTo] = useState();
+  const [amount, setAmount] = useState();
 
   // const [gobMethod, setGOBMethod] = useState(null);
   
@@ -89,8 +93,8 @@ const Home = () => {
       setProvider(safeAuth.getProvider());
 
       const provider = new ethers.providers.Web3Provider(safeAuth.getProvider());
-      const signer = provider.getSigner();
-      console.log(signer);
+      const _signer = provider.getSigner();
+      setSigner(_signer);
 
       const balance = await provider.getBalance(response.eoa);
       console.log(balance);
@@ -115,18 +119,45 @@ const Home = () => {
     }
   }
 
+  const sendETH = async () => {
+    const connection = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/");
+    const gasPrice = await connection.getGasPrice();
+    
+    const tx = {
+      from: walletAddress,
+      to: to,
+      value: ethers.utils.parseUnits(amount, "ether"),
+      gasPrice: gasPrice,
+      gasLimit: ethers.utils.hexlify(100000),
+      nonce: await connection.getTransactionCount(
+        walletAddress,
+        "latest"
+      )
+    }
+    console.log(tx);
+    const transaction = await signer.sendTransaction(tx);
+    console.log(transaction);
+  }
 
   return (
     <div style={{ padding: "1rem" }}>
-      <Typography.Title level={2}>Wallet as Desktop App</Typography.Title>   
+      <Typography.Title level={2}>Wallet as Desktop App</Typography.Title>
       <Button onClick={login} type="primary">
-        login
+        Login
       </Button>
       <br />
       <br />
       {walletAddress && <p>{walletAddress}</p>}
       <p>{balance / 10 ** 18} MATIC</p>
       {walletAddress && <Button onClick={logout} type="primary">logout</Button>}
+      <Typography.Title level={2}>
+        Transfer MATIC
+      </Typography.Title>
+      <Input placeholder="To" onChange={(e) => setTo(e.target.value)}/>
+      <Input placeholder="Amount" onChange={(e) => setAmount(e.target.value)}/>
+      <Button onClick={sendETH} type="primary">
+        Send
+      </Button>
     </div>
   )
 }
