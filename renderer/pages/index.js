@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Button, Input, Typography, Spin } from 'antd';
+import { Layout, Menu,Button, Input, Typography } from 'antd';
 
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
 
 import 'antd/dist/reset.css';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 import { WEB3AUTH_CLIENT_ID, RPC } from '../keys';
+
+const { Header, Content, Sider } = Layout;
 
 const Home = () => {
   const [walletAddress, setWalletAddress] = useState();
@@ -14,6 +16,7 @@ const Home = () => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   
+  const [currentTab, setCurrentTab] = useState("Overview")
   const [to, setTo] = useState();
   const [amount, setAmount] = useState();
 
@@ -65,26 +68,76 @@ const Home = () => {
     )
   }
 
-  const AuthedState = () => {
+  const Overview = () => {
     return (
-      <div>
-        {walletAddress && <p>{walletAddress}</p>}
+      <>
+        <Typography.Title level={2}>
+          Overview
+        </Typography.Title>
+        <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} MATIC</p>
-        {walletAddress && <Button onClick={logout} type="primary">logout</Button>}
+      </>
+    )
+  }
+
+  const TransferForm = () => {
+    return (
+      <>
         <Typography.Title level={2}>
           Transfer MATIC
         </Typography.Title>
+        <p>{balance / 10 ** 18} MATIC</p>
         <Input placeholder="To" onChange={(e) => setTo(e.target.value)}/>
         <Input placeholder="Amount" onChange={(e) => setAmount(e.target.value)}/>
         <Button onClick={() => sendETH(to, amount, walletAddress, signer)} type="primary">
           Send
         </Button>
-      </div>
+      </>
+    )
+  }
+
+  const AuthedState = () => {
+    return (
+      <Layout>
+        <Header className="header" style={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1>Welcome</h1>
+          <Button onClick={logout} type="primary">logout</Button>
+        </Header>
+        <Layout>
+          <Sider width={150} style={{ backgroundColor: 'white' }}>
+            <Menu
+              onClick={(e) => setCurrentTab(e.key)}
+              selectedKeys={[currentTab]}
+              defaultOpenKeys={['Overview']}
+              mode="inline"
+            >
+              <Menu.Item key="Overview">
+                Overview
+              </Menu.Item>
+              <Menu.Item key="Send">
+                Send
+              </Menu.Item>
+            </Menu>
+          </Sider>
+          <Layout style={{ padding: '0 24px 24px' }}>
+            <Content
+              style={{
+                padding: 20,
+                margin: 0,
+                minHeight: 480,
+              }}
+            >
+              {currentTab === "Overview" && <Overview />}
+              {currentTab === "Send" && <TransferForm />}
+            </Content>
+          </Layout>
+        </Layout>
+      </Layout>
     )
   }
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div>
       {provider
         ? <AuthedState />
         : <UnauthenticatedState />
