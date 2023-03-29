@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Input, Typography } from 'antd';
+import { Button, Input, Typography, Spin } from 'antd';
 
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
 
@@ -49,27 +49,46 @@ const Home = () => {
 
   const logout = async () => {
     await logoutSafe(safeAuth);
+    setProvider(null);
   }
-  
+
+  const UnauthenticatedState = () => {
+    return (
+      <center>
+        <Typography.Title level={2} style={{ marginTop: '10rem', marginBottom: '2rem' }}>
+          Wallet as Desktop App
+        </Typography.Title>
+        <Button onClick={login} type="primary" size='large'>
+          Login
+        </Button>
+      </center>
+    )
+  }
+
+  const AuthedState = () => {
+    return (
+      <div>
+        {walletAddress && <p>{walletAddress}</p>}
+        <p>{balance / 10 ** 18} MATIC</p>
+        {walletAddress && <Button onClick={logout} type="primary">logout</Button>}
+        <Typography.Title level={2}>
+          Transfer MATIC
+        </Typography.Title>
+        <Input placeholder="To" onChange={(e) => setTo(e.target.value)}/>
+        <Input placeholder="Amount" onChange={(e) => setAmount(e.target.value)}/>
+        <Button onClick={() => sendETH(to, amount, walletAddress, signer)} type="primary">
+          Send
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <div style={{ padding: "1rem" }}>
-      <Typography.Title level={2}>Wallet as Desktop App</Typography.Title>
-      <Button onClick={login} type="primary">
-        Login
-      </Button>
-      <br />
-      <br />
-      {walletAddress && <p>{walletAddress}</p>}
-      <p>{balance / 10 ** 18} MATIC</p>
-      {walletAddress && <Button onClick={logout} type="primary">logout</Button>}
-      <Typography.Title level={2}>
-        Transfer MATIC
-      </Typography.Title>
-      <Input placeholder="To" onChange={(e) => setTo(e.target.value)}/>
-      <Input placeholder="Amount" onChange={(e) => setAmount(e.target.value)}/>
-      <Button onClick={() => sendETH(to, amount, walletAddress, signer)} type="primary">
-        Send
-      </Button>
+      {provider
+        ? <AuthedState />
+        : <UnauthenticatedState />
+      }
     </div>
   )
 }
