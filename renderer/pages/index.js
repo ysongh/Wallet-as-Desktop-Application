@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Layout, Menu,Button, Input, Typography } from 'antd';
+import { Layout, Menu,Button, Input, Typography, QRCode } from 'antd';
 
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
 
@@ -96,6 +96,26 @@ const Home = () => {
     )
   }
 
+  const Receive = () => {
+    return (
+      <>
+        <Typography.Title level={2}>
+          Receive
+        </Typography.Title>
+       
+        <QRCode
+          value={walletAddress}
+          color="blue"
+          style={{
+            marginBottom: 16,
+          }}
+        />
+        
+        <p>{walletAddress}</p>
+      </>
+    )
+  }
+
   const AuthedState = () => {
     return (
       <Layout>
@@ -117,6 +137,9 @@ const Home = () => {
               <Menu.Item key="Send">
                 Send
               </Menu.Item>
+              <Menu.Item key="Receive">
+                Receive
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
@@ -129,6 +152,7 @@ const Home = () => {
             >
               {currentTab === "Overview" && <Overview />}
               {currentTab === "Send" && <TransferForm />}
+              {currentTab === "Receive" && <Receive />}
             </Content>
           </Layout>
         </Layout>
