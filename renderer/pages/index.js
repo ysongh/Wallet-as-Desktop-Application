@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Input, Typography } from 'antd';
-import { ethers } from 'ethers';
 
-// import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
-// import { GASLESSWALLET_KEY, RPC } from '../keys';
+import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
 
 import 'antd/dist/reset.css';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
@@ -12,54 +10,12 @@ import { WEB3AUTH_CLIENT_ID, RPC } from '../keys';
 const Home = () => {
   const [walletAddress, setWalletAddress] = useState();
   const [balance, setBalance] = useState();
-  const [safeAuthSignInResponse, setSafeAuthSignInResponse] = useState(
-    null
-  );
   const [safeAuth, setSafeAuth] = useState();
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   
   const [to, setTo] = useState();
   const [amount, setAmount] = useState();
-
-  // const [gobMethod, setGOBMethod] = useState(null);
-  
-  // const login = async () => {
-  //   try{
-  //     const gaslessWalletConfig = { apiKey: GASLESSWALLET_KEY };
-  //     const loginConfig = {
-  //       domains: [window.location.origin],
-  //       chain: {
-  //         // id: 5,
-  //         // rpcUrl: RPC,
-  //         id: 80001,
-  //         rpcUrl: "https://rpc-mumbai.maticvigil.com/",
-  //       }
-  //     };
-  //     const gaslessOnboarding = new GaslessOnboarding(
-  //       loginConfig,
-  //       gaslessWalletConfig
-  //     );
-
-  //     await gaslessOnboarding.init();
-  //     setGOBMethod(gaslessOnboarding);
-
-  //     const web3AuthProvider = await gaslessOnboarding.login();
-  //     console.log("web3AuthProvider", web3AuthProvider);
-
-  //     const gaslessWallet = gaslessOnboarding.getGaslessWallet();
-  //     setWalletAddress(gaslessWallet.getAddress());
-
-  //     const signer = new ethers.providers.Web3Provider(web3AuthProvider);
-  //     console.log(signer);
-
-  //     const balance = await signer.getBalance(gaslessWallet.getAddress());
-  //     setBalance(balance.toString());
-  //   }
-  //   catch(error){
-  //     console.log(error);
-  //   }
-  // }
 
   useEffect(() => {
     ;(async () => {
@@ -82,63 +38,19 @@ const Home = () => {
   }, [])
 
   const login = async () => {
-    try{
-      if (!safeAuth) return;
+    const { address, providerSafe, userSigner, ethbalance } = await loginSafe(safeAuth);
+    console.log(address, providerSafe, userSigner, ethbalance)
 
-      const response = await safeAuth.signIn();
-      console.log('SIGN IN RESPONSE: ', response);
-      setWalletAddress(response.eoa);
-  
-      setSafeAuthSignInResponse(response);
-      setProvider(safeAuth.getProvider());
-
-      const provider = new ethers.providers.Web3Provider(safeAuth.getProvider());
-      const _signer = provider.getSigner();
-      setSigner(_signer);
-
-      const balance = await provider.getBalance(response.eoa);
-      console.log(balance);
-      setBalance(balance.toString());
-    }
-    catch(error){
-      console.error(error);
-    }
+    setWalletAddress(address);
+    setProvider(providerSafe);
+    setSigner(userSigner);
+    setBalance(ethbalance);
   }
 
   const logout = async () => {
-    try{
-      if (!safeAuth) return;
-
-      await safeAuth.signOut();
-
-      setProvider(null);
-      setSafeAuthSignInResponse(null);
-    }
-    catch(error){
-      console.error(error);
-    }
+    await logoutSafe(safeAuth);
   }
-
-  const sendETH = async () => {
-    const connection = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/");
-    const gasPrice = await connection.getGasPrice();
-    
-    const tx = {
-      from: walletAddress,
-      to: to,
-      value: ethers.utils.parseUnits(amount, "ether"),
-      gasPrice: gasPrice,
-      gasLimit: ethers.utils.hexlify(100000),
-      nonce: await connection.getTransactionCount(
-        walletAddress,
-        "latest"
-      )
-    }
-    console.log(tx);
-    const transaction = await signer.sendTransaction(tx);
-    console.log(transaction);
-  }
-
+  
   return (
     <div style={{ padding: "1rem" }}>
       <Typography.Title level={2}>Wallet as Desktop App</Typography.Title>
@@ -155,7 +67,7 @@ const Home = () => {
       </Typography.Title>
       <Input placeholder="To" onChange={(e) => setTo(e.target.value)}/>
       <Input placeholder="Amount" onChange={(e) => setAmount(e.target.value)}/>
-      <Button onClick={sendETH} type="primary">
+      <Button onClick={() => sendETH(to, amount, walletAddress, signer)} type="primary">
         Send
       </Button>
     </div>
