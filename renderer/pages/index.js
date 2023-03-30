@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Layout, Menu,Button, Form, Input, Typography, QRCode } from 'antd';
 
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
+import { createSafe } from '../utils/safe';
 
 import 'antd/dist/reset.css';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
@@ -125,6 +126,20 @@ const Home = () => {
     )
   }
 
+  const Safe = () => {
+    return (
+      <>
+        <Typography.Title level={2}>
+          Safe
+        </Typography.Title>
+       
+        <Button onClick={() => createSafe(signer, walletAddress)} type="primary">
+          Create
+        </Button>
+      </>
+    )
+  }
+
   const AuthedState = () => {
     return (
       <Layout>
@@ -149,6 +164,9 @@ const Home = () => {
               <Menu.Item key="Receive">
                 Receive
               </Menu.Item>
+              <Menu.Item key="Safe">
+                Safe
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
@@ -162,6 +180,7 @@ const Home = () => {
               {currentTab === "Overview" && <Overview />}
               {currentTab === "Send" && <TransferForm />}
               {currentTab === "Receive" && <Receive />}
+              {currentTab === "Safe" && <Safe />}
             </Content>
           </Layout>
         </Layout>
