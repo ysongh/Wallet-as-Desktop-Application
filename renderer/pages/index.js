@@ -13,6 +13,7 @@ const { Header, Content, Sider } = Layout;
 const Home = () => {
   const [walletAddress, setWalletAddress] = useState();
   const [balance, setBalance] = useState();
+  const [safeBalance, setSafeBalance] = useState();
   const [safeAuth, setSafeAuth] = useState();
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -67,9 +68,10 @@ const Home = () => {
   }
 
   const findSafe = async () => {
-    const { sSdk, sAddress} = await getSafe(signer, enterSafeAddress);
+    const { sSdk, sAddress, balance } = await getSafe(signer, enterSafeAddress);
     setSafeSdk(sSdk);
     setSafeAddress(sAddress);
+    setSafeBalance(balance);
   }
 
   const UnauthenticatedState = () => {
@@ -150,6 +152,7 @@ const Home = () => {
         {safeAddress
           ? <>
               <p>{safeAddress}</p>
+              <p>{safeBalance / 10 ** 18} MATIC</p>
             </>
           : <>
               <Form.Item label="Safe Address">
