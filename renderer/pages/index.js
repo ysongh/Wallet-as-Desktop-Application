@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Layout, Menu,Button, Form, Input, Typography, QRCode } from 'antd';
+import { Layout, Menu,Button, Form, Input, Typography, Divider, QRCode, Tag } from 'antd';
 
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
 import { createSafe, getSafe } from '../utils/safe';
+import { getSafesByUserFromPB, addSafeToPB } from '../utils/polybase';
 
 import 'antd/dist/reset.css';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
@@ -19,6 +20,7 @@ const Home = () => {
   const [signer, setSigner] = useState(null);
   const [safeSdk, setSafeSdk] = useState(null);
   const [safeAddress, setSafeAddress] = useState();
+  const [userData, setUserData] = useState();
   
   const [currentTab, setCurrentTab] = useState("Overview")
   const [to, setTo] = useState();
@@ -54,10 +56,12 @@ const Home = () => {
     setProvider(providerSafe);
     setSigner(userSigner);
     setBalance(ethbalance);
+    const data = await getSafesByUserFromPB(address);
+    setUserData(data);
   }
 
   const logout = async () => {
-    await logoutSafe(safeAuth);
+    //await logoutSafe(safeAuth);
     setProvider(null);
   }
 
@@ -65,10 +69,11 @@ const Home = () => {
     const { sSdk, sAddress} = setSafeSdk(await createSafe(signer, walletAddress));
     setSafeSdk(sSdk);
     setSafeAddress(sAddress);
+    await addSafeToPB(walletAddress, sAddress);
   }
 
-  const findSafe = async () => {
-    const { sSdk, sAddress, balance } = await getSafe(signer, enterSafeAddress);
+  const findSafe = async (safeAddress) => {
+    const { sSdk, sAddress, balance } = await getSafe(signer, safeAddress);
     setSafeSdk(sSdk);
     setSafeAddress(sAddress);
     setSafeBalance(balance);
@@ -95,6 +100,9 @@ const Home = () => {
         </Typography.Title>
         <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} MATIC</p>
+        {/* <Button onClick={() => getSafesByUserFromPB(walletAddress)} type="primary" style={{ marginBottom: '2rem' }}>
+          Create Collection
+        </Button> */}
       </>
     )
   }
@@ -155,15 +163,20 @@ const Home = () => {
               <p>{safeBalance / 10 ** 18} MATIC</p>
             </>
           : <>
+              <Divider orientation="left">Existing Safes</Divider>
+              {userData?.safes?.map(s => (
+                <Tag key={s} color="cyan" onClick={() => findSafe(s)} style={{ cursor: "pointer" }}>
+                  {s}
+                </Tag>
+              ))}
+              <Divider orientation="left">Search for Safes</Divider>
               <Form.Item label="Safe Address">
                 <Input placeholder="0x0" value={enterSafeAddress} onChange={(e) => setEnterSafeAddress(e.target.value)}/>
               </Form.Item>
-
-              <Button onClick={findSafe} type="primary" style={{ marginBottom: '2rem' }}>
+              <Button onClick={() => findSafe(enterSafeAddress)} type="primary">
                 Find
               </Button>
-            
-              <p>Don't have one?</p>
+              <Divider orientation="left">Don't have one?</Divider>
               <Button onClick={makeSafe} type="primary">
                 Create
               </Button>
