@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Layout, Menu,Button, Form, Input, Typography, QRCode } from 'antd';
 
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
-import { createSafe } from '../utils/safe';
+import { createSafe, getSafe } from '../utils/safe';
 
 import 'antd/dist/reset.css';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
@@ -16,10 +16,14 @@ const Home = () => {
   const [safeAuth, setSafeAuth] = useState();
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
+  const [safeSdk, setSafeSdk] = useState(null);
+  const [safeAddress, setSafeAddress] = useState();
   
   const [currentTab, setCurrentTab] = useState("Overview")
   const [to, setTo] = useState();
   const [amount, setAmount] = useState();
+  const [enterSafeAddress, setEnterSafeAddress] = useState();
+
 
   useEffect(() => {
     ;(async () => {
@@ -54,6 +58,18 @@ const Home = () => {
   const logout = async () => {
     await logoutSafe(safeAuth);
     setProvider(null);
+  }
+
+  const makeSafe = async () => {
+    const { sSdk, sAddress} = setSafeSdk(await createSafe(signer, walletAddress));
+    setSafeSdk(sSdk);
+    setSafeAddress(sAddress);
+  }
+
+  const findSafe = async () => {
+    const { sSdk, sAddress} = await getSafe(signer, enterSafeAddress);
+    setSafeSdk(sSdk);
+    setSafeAddress(sAddress);
   }
 
   const UnauthenticatedState = () => {
@@ -96,12 +112,10 @@ const Home = () => {
             <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
           </Form.Item>
           
-          
           <Button onClick={() => sendETH(to, amount, walletAddress, signer)} type="primary">
             Send
           </Button>
         </Form>
-        
       </>
     )
   }
@@ -132,10 +146,26 @@ const Home = () => {
         <Typography.Title level={2}>
           Safe
         </Typography.Title>
-       
-        <Button onClick={() => createSafe(signer, walletAddress)} type="primary">
-          Create
-        </Button>
+        
+        {safeAddress
+          ? <>
+              <p>{safeAddress}</p>
+            </>
+          : <>
+              <Form.Item label="Safe Address">
+                <Input placeholder="0x0" value={enterSafeAddress} onChange={(e) => setEnterSafeAddress(e.target.value)}/>
+              </Form.Item>
+
+              <Button onClick={findSafe} type="primary" style={{ marginBottom: '2rem' }}>
+                Find
+              </Button>
+            
+              <p>Don't have one?</p>
+              <Button onClick={makeSafe} type="primary">
+                Create
+              </Button>
+            </>
+        }
       </>
     )
   }
