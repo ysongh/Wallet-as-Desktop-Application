@@ -3,6 +3,7 @@ import { Layout, Menu,Button, Form, Input, Typography, Divider, Steps, QRCode, T
 
 import { stepsItems } from '../utils/antdesign';
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
+import { fundWallet } from '../utils/onramp';
 import { createSafe, getSafe, createSafeTransaction, executeSafeTransaction } from '../utils/safe';
 import { getSafesByUserFromPB, addSafeToPB } from '../utils/polybase';
 
@@ -65,7 +66,7 @@ const Home = () => {
   }
 
   const logout = async () => {
-    //await logoutSafe(safeAuth);
+    await logoutSafe(safeAuth);
     setProvider(null);
   }
 
@@ -94,7 +95,7 @@ const Home = () => {
     return (
       <center>
         <Typography.Title level={2} style={{ marginTop: '10rem', marginBottom: '2rem' }}>
-          Wallet as Desktop App
+          Desktop Safe Wallet
         </Typography.Title>
         <Button onClick={login} type="primary" size='large'>
           Login
@@ -105,16 +106,16 @@ const Home = () => {
 
   const Overview = () => {
     return (
-      <>
+      <div id='stripe-root'>
         <Typography.Title level={2}>
           Overview
         </Typography.Title>
         <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} MATIC</p>
-        {/* <Button onClick={() => executeSafeTransaction()} type="primary" style={{ marginBottom: '2rem' }}>
-          Create Collection
-        </Button> */}
-      </>
+        <Button onClick={() => fundWallet(walletAddress)} type="primary" style={{ marginBottom: '2rem' }}>
+          Add Fund
+        </Button>
+      </div>
     )
   }
 
@@ -172,6 +173,10 @@ const Home = () => {
           ? <>
               <p>{safeAddress}</p>
               <p>{safeBalance / 10 ** 18} MATIC</p>
+              <Button onClick={() => fundWallet(safeAddress)} type="primary" style={{ marginBottom: '2rem' }}>
+                Add Fund
+              </Button>
+              <div id='stripe-root'></div>
               <Typography.Title level={4}>
                 Owners
               </Typography.Title>
