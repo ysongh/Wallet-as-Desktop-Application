@@ -2,12 +2,19 @@ import { ethers } from 'ethers';
 import Safe, { SafeFactory } from '@safe-global/safe-core-sdk';
 import EthersAdapter from '@safe-global/safe-ethers-lib';
 
-export const createSafe = async (signer, walletAddress) => {
+export const createSafe = async (signer, threshold, owners, messageApi) => {
   try{
     const ethAdapter = new EthersAdapter({ethers, signerOrProvider: signer});
     const safeFactory = await SafeFactory.create({ ethAdapter });
-    const sSdk = await safeFactory.deploySafe({ safeAccountConfig: { threshold: 1, owners: [walletAddress] }});
+    const sSdk = await safeFactory.deploySafe({ safeAccountConfig: { threshold: threshold, owners: owners }});
     const sAddress = sSdk.getAddress();
+
+    messageApi.open({
+      type: 'success',
+      content: `Safe created`,
+      duration: 20,
+    });
+
     return { sSdk, sAddress };
   }
   catch(error){

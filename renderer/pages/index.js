@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Layout, Menu,Button, Form, Input, Typography, Divider, QRCode, Tag, message } from 'antd';
+import { Layout, Menu,Button, Form, Input, Typography, Divider, Steps, QRCode, Tag, message } from 'antd';
 
+import { stepsItems } from '../utils/antdesign';
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
 import { createSafe, getSafe, createSafeTransaction, executeSafeTransaction } from '../utils/safe';
 import { getSafesByUserFromPB, addSafeToPB } from '../utils/polybase';
@@ -16,7 +17,7 @@ const Home = () => {
 
   const [walletAddress, setWalletAddress] = useState();
   const [balance, setBalance] = useState();
-  const [safeBalance, setSafeBalance] = useState();
+  const [safeBalance, setSafeBalance] = useState(0);
   const [safeAuth, setSafeAuth] = useState();
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -24,11 +25,12 @@ const Home = () => {
   const [safeAddress, setSafeAddress] = useState();
   const [userData, setUserData] = useState();
   
-  const [currentTab, setCurrentTab] = useState("Overview")
+  const [currentTab, setCurrentTab] = useState("Overview");
+  const [currentStep, setCurrentStep] = useState(0);
   const [to, setTo] = useState();
   const [amount, setAmount] = useState();
   const [enterSafeAddress, setEnterSafeAddress] = useState();
-
+  const [enterOwners, setEnterOwners] = useState([]);
 
   useEffect(() => {
     ;(async () => {
@@ -68,10 +70,11 @@ const Home = () => {
   }
 
   const makeSafe = async () => {
-    const { sSdk, sAddress} = setSafeSdk(await createSafe(signer, walletAddress));
+    const { sSdk, sAddress} = await createSafe(signer, amount, enterOwners, messageApi);
     setSafeSdk(sSdk);
     setSafeAddress(sAddress);
     await addSafeToPB(walletAddress, sAddress);
+    setCurrentTab("Safe");
   }
 
   const findSafe = async (safeAddress) => {
@@ -79,6 +82,11 @@ const Home = () => {
     setSafeSdk(sSdk);
     setSafeAddress(sAddress);
     setSafeBalance(balance);
+  }
+
+  const handleAddOwner = async () => {
+    setEnterOwners([...enterOwners, to]);
+    setTo("");
   }
 
   const UnauthenticatedState = () => {
@@ -191,12 +199,103 @@ const Home = () => {
                 Find
               </Button>
               <Divider orientation="left">Don't have one?</Divider>
-              <Button onClick={makeSafe} type="primary">
+              <Button onClick={() => setCurrentTab("CreateSafe")} type="primary">
                 Create
               </Button>
             </>
         }
       </>
+    )
+  }
+
+  const CreateSafe = () => {
+    return (
+      <>
+        <Typography.Title level={2}>
+          Create Safe
+        </Typography.Title>
+        <Steps current={currentStep} items={stepsItems} />
+        {currentStep === 0 && <Step1 />}
+        {currentStep === 1 && <Step2 />}
+        {currentStep === 2 && <Step3 />}
+      </>
+    )
+  }
+
+  const Step1 = () => {
+    return (
+      <div style={{ marginTop: '1rem'}}>
+        <Typography.Title level={4}>
+          Add number of owners
+        </Typography.Title>
+        {enterOwners.map((o, index) => (
+          <p key={index}>
+            {index + 1} -
+            <Tag color="cyan">
+              {o}
+            </Tag>
+          </p>
+        ))}
+        <Form.Item label="Signer">
+          <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)} />
+        </Form.Item>
+        <Button onClick={handleAddOwner} type="primary">
+          Add
+        </Button>
+        <Button onClick={() => setCurrentStep(currentStep + 1)} type="primary">
+          Next
+        </Button>
+      </div>
+    )
+  }
+
+  const Step2 = () => {
+    return (
+      <div style={{ marginTop: '1rem'}}>
+        <Typography.Title level={4}>
+          Threshold
+        </Typography.Title>
+        
+        <Form.Item label="Threshold">
+          <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
+        </Form.Item>
+
+        <Button onClick={() => setCurrentStep(currentStep + 1)} type="primary">
+          Next
+        </Button>
+        <Button onClick={() => setCurrentStep(currentStep + 1)} type="primary">
+          Back
+        </Button>
+      </div>
+    )
+  }
+
+  const Step3 = () => {
+    return (
+      <div style={{ marginTop: '1rem'}}>
+        <Typography.Title level={4}>
+          Number of Signers
+        </Typography.Title>
+        {enterOwners.map((o, index) => (
+          <p key={index}>
+            {index + 1} -
+            <Tag color="cyan">
+              {o}
+            </Tag>
+          </p>
+        ))}
+
+        <Typography.Title level={4}>
+          Threshold - {amount}
+        </Typography.Title>
+
+        <Button onClick={makeSafe} type="primary">
+          Create
+        </Button>
+        <Button onClick={() => setCurrentStep(currentStep - 1)} type="primary">
+          Back
+        </Button>
+      </div>
     )
   }
 
@@ -232,7 +331,7 @@ const Home = () => {
           <Layout style={{ padding: '0 24px 24px' }}>
             <Content
               style={{
-                padding: 20,
+                paddingTop: 10,
                 margin: 0,
                 minHeight: 480,
               }}
@@ -241,6 +340,7 @@ const Home = () => {
               {currentTab === "Send" && <TransferForm />}
               {currentTab === "Receive" && <Receive />}
               {currentTab === "Safe" && <Safe />}
+              {currentTab === "CreateSafe" && <CreateSafe />}
             </Content>
           </Layout>
         </Layout>
