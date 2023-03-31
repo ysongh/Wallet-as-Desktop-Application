@@ -27,3 +27,39 @@ export const getSafe = async (signer, address) => {
     console.error(error);
   }
 }
+
+export const createSafeTransaction= async (to, amount, sSdk) => {
+  try{
+    const safeTransactionData = {
+      to: to,
+      value: amount,
+      data: '0x'
+    };
+    const safeTransaction = await sSdk.createTransaction({ safeTransactionData });
+    console.log(safeTransaction);
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+export const executeSafeTransaction= async (to, amount, sSdk, signer, safeAddress) => {
+  try{
+    const safeTransactionData = {
+      to: to,
+      value: ethers.utils.parseUnits(amount, "ether"),
+      data: '0x'
+    };
+    const safeTransaction = await sSdk.createTransaction({ safeTransactionData });
+    const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer });
+    const safeSdk3 = await sSdk.connect({ ethAdapter: ethAdapter, safeAddress });
+    console.log(safeTransactionData);
+    
+    const executeTxResponse = await safeSdk3.executeTransaction(safeTransaction);
+    await executeTxResponse.transactionResponse?.wait();
+    console.log(executeTxResponse);
+  }
+  catch(error){
+    console.error(error);
+  }
+}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Layout, Menu,Button, Form, Input, Typography, Divider, QRCode, Tag } from 'antd';
 
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
-import { createSafe, getSafe } from '../utils/safe';
+import { createSafe, getSafe, createSafeTransaction, executeSafeTransaction } from '../utils/safe';
 import { getSafesByUserFromPB, addSafeToPB } from '../utils/polybase';
 
 import 'antd/dist/reset.css';
@@ -100,7 +100,7 @@ const Home = () => {
         </Typography.Title>
         <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} MATIC</p>
-        {/* <Button onClick={() => getSafesByUserFromPB(walletAddress)} type="primary" style={{ marginBottom: '2rem' }}>
+        {/* <Button onClick={() => executeSafeTransaction()} type="primary" style={{ marginBottom: '2rem' }}>
           Create Collection
         </Button> */}
       </>
@@ -161,6 +161,18 @@ const Home = () => {
           ? <>
               <p>{safeAddress}</p>
               <p>{safeBalance / 10 ** 18} MATIC</p>
+              <Form layout="vertical" >
+                <Form.Item label="To">
+                  <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)} />
+                </Form.Item>
+                <Form.Item label="Amount">
+                  <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
+                </Form.Item>
+                
+                <Button onClick={() => executeSafeTransaction(to, amount, safeSdk, signer, safeAddress)} type="primary">
+                  Send
+                </Button>
+              </Form>
             </>
           : <>
               <Divider orientation="left">Existing Safes</Divider>
