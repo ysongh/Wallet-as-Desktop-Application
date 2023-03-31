@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Layout, Menu,Button, Form, Input, Typography, Divider, QRCode, Tag } from 'antd';
+import { Layout, Menu,Button, Form, Input, Typography, Divider, QRCode, Tag, message } from 'antd';
 
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
 import { createSafe, getSafe, createSafeTransaction, executeSafeTransaction } from '../utils/safe';
@@ -12,6 +12,8 @@ import { WEB3AUTH_CLIENT_ID, RPC } from '../keys';
 const { Header, Content, Sider } = Layout;
 
 const Home = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [walletAddress, setWalletAddress] = useState();
   const [balance, setBalance] = useState();
   const [safeBalance, setSafeBalance] = useState();
@@ -122,7 +124,7 @@ const Home = () => {
             <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
           </Form.Item>
           
-          <Button onClick={() => sendETH(to, amount, walletAddress, signer)} type="primary">
+          <Button onClick={() => sendETH(to, amount, walletAddress, signer, messageApi)} type="primary">
             Send
           </Button>
         </Form>
@@ -169,7 +171,7 @@ const Home = () => {
                   <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
                 </Form.Item>
                 
-                <Button onClick={() => executeSafeTransaction(to, amount, safeSdk, signer, safeAddress)} type="primary">
+                <Button onClick={() => executeSafeTransaction(to, amount, safeSdk, signer, safeAddress, messageApi)} type="primary">
                   Send
                 </Button>
               </Form>
@@ -248,6 +250,7 @@ const Home = () => {
 
   return (
     <div>
+      {contextHolder}
       {provider
         ? <AuthedState />
         : <UnauthenticatedState />

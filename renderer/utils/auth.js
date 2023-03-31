@@ -70,7 +70,7 @@ export const logoutSafe = async (safeAuth) => {
   }
 }
 
-export const sendETH = async (to, amount, walletAddress, signer) => {
+export const sendETH = async (to, amount, walletAddress, signer, messageApi) => {
   const connection = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/");
   const gasPrice = await connection.getGasPrice();
   
@@ -85,7 +85,13 @@ export const sendETH = async (to, amount, walletAddress, signer) => {
       "latest"
     )
   }
-  console.log(tx);
+
   const transaction = await signer.sendTransaction(tx);
   console.log(transaction);
+  
+  messageApi.open({
+    type: 'success',
+    content: `Send ${amount} MATIC success`,
+    duration: 20,
+  });
 }

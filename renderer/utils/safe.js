@@ -43,7 +43,7 @@ export const createSafeTransaction= async (to, amount, sSdk) => {
   }
 }
 
-export const executeSafeTransaction= async (to, amount, sSdk, signer, safeAddress) => {
+export const executeSafeTransaction= async (to, amount, sSdk, signer, safeAddress, messageApi) => {
   try{
     const safeTransactionData = {
       to: to,
@@ -54,10 +54,16 @@ export const executeSafeTransaction= async (to, amount, sSdk, signer, safeAddres
     const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer });
     const safeSdk3 = await sSdk.connect({ ethAdapter: ethAdapter, safeAddress });
     console.log(safeTransactionData);
-    
+
     const executeTxResponse = await safeSdk3.executeTransaction(safeTransaction);
     await executeTxResponse.transactionResponse?.wait();
     console.log(executeTxResponse);
+
+    messageApi.open({
+      type: 'success',
+      content: `Send ${amount} MATIC success`,
+      duration: 20,
+    });
   }
   catch(error){
     console.error(error);
