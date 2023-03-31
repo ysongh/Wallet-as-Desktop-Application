@@ -78,10 +78,11 @@ const Home = () => {
   }
 
   const findSafe = async (safeAddress) => {
-    const { sSdk, sAddress, balance } = await getSafe(signer, safeAddress);
+    const { sSdk, sAddress, balance, ownerAddresses } = await getSafe(signer, safeAddress);
     setSafeSdk(sSdk);
     setSafeAddress(sAddress);
     setSafeBalance(balance);
+    setEnterOwners(ownerAddresses);
   }
 
   const handleAddOwner = async () => {
@@ -171,6 +172,18 @@ const Home = () => {
           ? <>
               <p>{safeAddress}</p>
               <p>{safeBalance / 10 ** 18} MATIC</p>
+              <Typography.Title level={4}>
+                Owners
+              </Typography.Title>
+              {enterOwners.map((o, index) => (
+                <p key={index}>
+                  {index + 1} -
+                  <Tag color="cyan">
+                    {o}
+                  </Tag>
+                </p>
+              ))}
+              <Divider orientation="left">Transfer</Divider>
               <Form layout="vertical" >
                 <Form.Item label="To">
                   <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)} />
@@ -178,7 +191,6 @@ const Home = () => {
                 <Form.Item label="Amount">
                   <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
                 </Form.Item>
-                
                 <Button onClick={() => executeSafeTransaction(to, amount, safeSdk, signer, safeAddress, messageApi)} type="primary">
                   Send
                 </Button>

@@ -28,7 +28,9 @@ export const getSafe = async (signer, address) => {
     const sSdk = await Safe.create({ ethAdapter: ethAdapter, safeAddress: address })
     const sAddress = sSdk.getAddress();
     const balance = await sSdk.getBalance();
-    return { sSdk, sAddress, balance: balance.toString() };
+    const ownerAddresses = await sSdk.getOwners();
+    console.log(ownerAddresses)
+    return { sSdk, sAddress, balance: balance.toString(), ownerAddresses };
   }
   catch(error){
     console.error(error);
