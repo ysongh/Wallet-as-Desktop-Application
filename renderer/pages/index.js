@@ -165,9 +165,15 @@ const Home = () => {
   const Safe = () => {
     return (
       <>
-        <Typography.Title level={2}>
-          Safe
-        </Typography.Title>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography.Title level={2}>
+            Safe
+          </Typography.Title>
+          {safeAddress && <Button onClick={() => setSafeAddress(null)} type="primary" style={{ marginBottom: '2rem' }}>
+            Exit
+          </Button>}
+        </div>
+        
         
         {safeAddress
           ? <>
