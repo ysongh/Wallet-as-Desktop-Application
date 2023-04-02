@@ -57,6 +57,10 @@ const Dashboard = () => {
     })()
   }, [])
 
+  useEffect(() => {
+    if(safeAuth) login();
+   }, [safeAuth])
+
   const login = async () => {
     const { address, providerSafe, userSigner, ethbalance } = await loginSafe(safeAuth);
     console.log(address, providerSafe, userSigner, ethbalance)
