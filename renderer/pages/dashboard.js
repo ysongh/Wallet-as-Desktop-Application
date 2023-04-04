@@ -322,7 +322,7 @@ const Dashboard = () => {
     <Layout>
       <Header className="header" style={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Welcome</h1>
-        <Button onClick={logout} type="primary">logout</Button>
+        <Button onClick={logout} type="primary">Logout</Button>
       </Header>
       <Layout>
         <Sider width={150} style={{ backgroundColor: 'white' }}>
