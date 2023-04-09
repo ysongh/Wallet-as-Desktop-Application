@@ -105,6 +105,7 @@ const Dashboard = () => {
         <Typography.Title level={2}>
           Overview
         </Typography.Title>
+        <Tag color="purple" style={{ marginBottom: '1rem' }}>Polygon Testnet</Tag>
         <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} MATIC</p>
         {/* <Button onClick={() => fundWallet(walletAddress)} type="primary" style={{ marginBottom: '2rem' }}>
