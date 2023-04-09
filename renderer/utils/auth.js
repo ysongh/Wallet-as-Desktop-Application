@@ -1,44 +1,4 @@
-import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 import { ethers } from 'ethers';
-
-import { GASLESSWALLET_KEY, RPC } from '../keys';
-
-export const loginGasless = async () => {
-  try{
-    const gaslessWalletConfig = { apiKey: GASLESSWALLET_KEY };
-    const loginConfig = {
-      domains: [window.location.origin],
-      chain: {
-        // id: 5,
-        // rpcUrl: RPC,
-        id: 80001,
-        rpcUrl: "https://rpc-mumbai.maticvigil.com/",
-      }
-    };
-    const gaslessOnboarding = new GaslessOnboarding(
-      loginConfig,
-      gaslessWalletConfig
-    );
-
-    await gaslessOnboarding.init();
-    setGOBMethod(gaslessOnboarding);
-
-    const web3AuthProvider = await gaslessOnboarding.login();
-    console.log("web3AuthProvider", web3AuthProvider);
-
-    const gaslessWallet = gaslessOnboarding.getGaslessWallet();
-    setWalletAddress(gaslessWallet.getAddress());
-
-    const signer = new ethers.providers.Web3Provider(web3AuthProvider);
-    console.log(signer);
-
-    const balance = await signer.getBalance(gaslessWallet.getAddress());
-    setBalance(balance.toString());
-  }
-  catch(error){
-    console.log(error);
-  }
-}
 
 export const loginSafe = async (safeAuth) => {
   try{

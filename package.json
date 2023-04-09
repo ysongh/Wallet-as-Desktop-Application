@@ -26,7 +26,6 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@gelatonetwork/gasless-onboarding": "^0.0.3",
     "@polybase/client": "^0.3.38",
     "@safe-global/auth-kit": "^0.1.0-alpha.2",
     "@safe-global/safe-core-sdk": "^3.3.2",
