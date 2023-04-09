@@ -4,7 +4,6 @@ import { Layout, Menu,Button, Form, Input, Typography, Divider, Steps, QRCode, T
 
 import { stepsItems } from '../utils/antdesign';
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
-import { fundWallet } from '../utils/onramp';
 import { createSafe, getSafe, createSafeTransaction, executeSafeTransaction } from '../utils/safe';
 import { getSafesByUserFromPB, addSafeToPB } from '../utils/polybase';
 
@@ -108,9 +107,9 @@ const Dashboard = () => {
         </Typography.Title>
         <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} MATIC</p>
-        <Button onClick={() => fundWallet(walletAddress)} type="primary" style={{ marginBottom: '2rem' }}>
+        {/* <Button onClick={() => fundWallet(walletAddress)} type="primary" style={{ marginBottom: '2rem' }}>
           Add Fund
-        </Button>
+        </Button> */}
       </div>
     )
   }
@@ -175,9 +174,6 @@ const Dashboard = () => {
           ? <>
               <p>{safeAddress}</p>
               <p>{safeBalance / 10 ** 18} MATIC</p>
-              <Button onClick={() => fundWallet(safeAddress)} type="primary" style={{ marginBottom: '2rem' }}>
-                Add Fund
-              </Button>
               <div id='stripe-root'></div>
               <Typography.Title level={4}>
                 Owners
