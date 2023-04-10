@@ -10,6 +10,7 @@ import { getSafesByUserFromPB, addSafeToPB } from '../utils/polybase';
 import 'antd/dist/reset.css';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 import { WEB3AUTH_CLIENT_ID, RPC } from '../keys';
+import TransferForm from '../components/TransferForm';
 
 const { Header, Content, Sider } = Layout;
 
@@ -112,29 +113,6 @@ const Dashboard = () => {
           Add Fund
         </Button> */}
       </div>
-    )
-  }
-
-  const TransferForm = () => {
-    return (
-      <>
-        <Typography.Title level={2}>
-          Transfer MATIC
-        </Typography.Title>
-        <p>Balance {balance / 10 ** 18} MATIC</p>
-        <Form layout="vertical" >
-          <Form.Item label="To">
-            <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)} />
-          </Form.Item>
-          <Form.Item label="Amount">
-            <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
-          </Form.Item>
-          
-          <Button onClick={() => sendETH(to, amount, walletAddress, signer, messageApi)} type="primary" disabled={!to || !amount}>
-            Send
-          </Button>
-        </Form>
-      </>
     )
   }
 
@@ -352,7 +330,7 @@ const Dashboard = () => {
             }}
           >
             {currentTab === "Overview" && <Overview />}
-            {currentTab === "Send" && <TransferForm />}
+            {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} to={to} setTo={setTo} amount={amount} setAmount={setAmount} handleOnClick={sendETH} />}
             {currentTab === "Receive" && <Receive />}
             {currentTab === "Safe" && <Safe />}
             {currentTab === "CreateSafe" && <CreateSafe />}
