@@ -130,7 +130,7 @@ const Dashboard = () => {
             <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
           </Form.Item>
           
-          <Button onClick={() => sendETH(to, amount, walletAddress, signer, messageApi)} type="primary">
+          <Button onClick={() => sendETH(to, amount, walletAddress, signer, messageApi)} type="primary" disabled={!to || !amount}>
             Send
           </Button>
         </Form>
@@ -195,7 +195,7 @@ const Dashboard = () => {
                 <Form.Item label="Amount">
                   <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
                 </Form.Item>
-                <Button onClick={() => executeSafeTransaction(to, amount, safeSdk, signer, safeAddress, messageApi)} type="primary">
+                <Button onClick={() => executeSafeTransaction(to, amount, safeSdk, signer, safeAddress, messageApi)} type="primary" disabled={!to || !amount}>
                   Send
                 </Button>
               </Form>
