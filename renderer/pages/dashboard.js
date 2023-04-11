@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Layout, Menu,Button, Form, Input, Typography, Divider, Steps, QRCode, Tag, message } from 'antd';
+import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 
 import { stepsItems } from '../utils/antdesign';
 import { loginSafe, logoutSafe, sendETH } from '../utils/auth';
 import { createSafe, getSafe, createSafeTransaction, executeSafeTransaction } from '../utils/safe';
 import { getSafesByUserFromPB, addSafeToPB } from '../utils/polybase';
+import { WEB3AUTH_CLIENT_ID } from '../keys';
+import { NETWORK } from '../network';
 
 import 'antd/dist/reset.css';
-import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
-import { WEB3AUTH_CLIENT_ID, RPC } from '../keys';
 import TransferForm from '../components/TransferForm';
 
 const { Header, Content, Sider } = Layout;
@@ -42,9 +43,9 @@ const Dashboard = () => {
 
   const createInstanceAuth = async () => {
     const safeAuthKit = await SafeAuthKit.init(SafeAuthProviderType.Web3Auth, {
-      chainId: '0x13881',
+      chainId: NETWORK["polygon"].chainId,
       authProviderConfig: {
-        rpcTarget: RPC, // Add your RPC e.g. https://goerli.infura.io/v3/<your project id>
+        rpcTarget: NETWORK["polygon"].rpc, // Add your RPC e.g. https://goerli.infura.io/v3/<your project id>
         clientId: WEB3AUTH_CLIENT_ID, // Add your client id. Get it from the Web3Auth dashboard
         network: 'testnet' | 'mainnet', // The network to use for the Web3Auth modal. Use 'testnet' while developing and 'mainnet' for production use
         theme: 'light' | 'dark', // The theme to use for the Web3Auth modal
