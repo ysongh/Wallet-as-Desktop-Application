@@ -105,9 +105,9 @@ const Dashboard = () => {
         <Typography.Title level={2}>
           Overview
         </Typography.Title>
-        <Tag color="purple" style={{ marginBottom: '1rem' }}>Polygon Testnet</Tag>
+        <Tag color="purple" style={{ marginBottom: '1rem' }}>{NETWORK[network].networkName}</Tag>
         <p>{walletAddress}</p>
-        <p>{balance / 10 ** 18} MATIC</p>
+        <p>{balance / 10 ** 18} {NETWORK[network].tokenSymbol}</p>
         {/* <Button onClick={() => fundWallet(walletAddress)} type="primary" style={{ marginBottom: '2rem' }}>
           Add Fund
         </Button> */}
@@ -151,7 +151,7 @@ const Dashboard = () => {
         {safeAddress
           ? <>
               <p>{safeAddress}</p>
-              <p>{safeBalance / 10 ** 18} MATIC</p>
+              <p>{safeBalance / 10 ** 18} {NETWORK[network].tokenSymbol}</p>
               <div id='stripe-root'></div>
               <Typography.Title level={4}>
                 Owners
