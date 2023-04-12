@@ -8,8 +8,8 @@ const NETWORK_LIST = [
     label: 'Polygon Mumbai',
   },
   {
-    value: 'sepolia',
-    label: 'Sepolia',
+    value: 'mandala',
+    label: 'Mandala Testnet',
   },
 ]
 
