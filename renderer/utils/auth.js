@@ -55,3 +55,9 @@ export const sendETH = async (to, amount, walletAddress, signer, messageApi) => 
     duration: 20,
   });
 }
+
+export const getGasPrice = async () => {
+  const connection = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/");
+  const gasPrice = await connection.getGasPrice();
+  return gasPrice;
+}
