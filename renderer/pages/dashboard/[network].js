@@ -4,7 +4,7 @@ import { Layout, Menu,Button, Form, Input, Typography, Divider, Steps, QRCode, T
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 
 import { stepsItems } from '../../utils/antdesign';
-import { loginSafe, logoutSafe, sendETH } from '../../utils/auth';
+import { loginSafe, logoutSafe } from '../../utils/auth';
 import { createSafe, getSafe, createSafeTransaction, executeSafeTransaction } from '../../utils/safe';
 import { getSafesByUserFromPB, addSafeToPB } from '../../utils/polybase';
 import { WEB3AUTH_CLIENT_ID } from '../../keys';
@@ -329,7 +329,7 @@ const Dashboard = () => {
             }}
           >
             {currentTab === "Overview" && <Overview />}
-            {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} to={to} setTo={setTo} amount={amount} setAmount={setAmount} handleOnClick={sendETH} />}
+            {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} />}
             {currentTab === "Receive" && <Receive />}
             {currentTab === "Safe" && <Safe />}
             {currentTab === "CreateSafe" && <CreateSafe />}

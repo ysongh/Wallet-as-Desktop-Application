@@ -1,7 +1,12 @@
-import React from 'react';
+import { useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 
-const TransferForm = ({ balance, walletAddress, messageApi, signer, to, amount, setAmount, setTo, handleOnClick}) => {
+import { sendETH } from '../utils/auth';
+
+const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
+  const [to, setTo] = useState();
+  const [amount, setAmount] = useState();
+
   return (
     <div>
       <Typography.Title level={2}>
@@ -16,7 +21,7 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer, to, amount, 
           <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
         </Form.Item>
         
-        <Button onClick={() => handleOnClick(to, amount, walletAddress, signer, messageApi)} type="primary" disabled={!to || !amount}>
+        <Button onClick={() => sendETH(to, amount, walletAddress, signer, messageApi)} type="primary" disabled={!to || !amount}>
           Send
         </Button>
       </Form>
