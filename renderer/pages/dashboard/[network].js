@@ -39,7 +39,8 @@ const Dashboard = () => {
   const [enterOwners, setEnterOwners] = useState([]);
 
   useEffect(() => {
-    createInstanceAuth();
+    if(!network) router.push('/');
+    else createInstanceAuth();
   }, [])
 
   const createInstanceAuth = async () => {
@@ -75,7 +76,7 @@ const Dashboard = () => {
   const logout = async () => {
     //await logoutSafe(safeAuth);
     setProvider(null);
-    router.push('/')
+    router.push('/');
   }
 
   const makeSafe = async () => {
