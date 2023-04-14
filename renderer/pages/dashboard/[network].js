@@ -5,13 +5,14 @@ import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 
 import { stepsItems } from '../../utils/antdesign';
 import { loginSafe, logoutSafe } from '../../utils/auth';
-import { createSafe, getSafe, createSafeTransaction, executeSafeTransaction } from '../../utils/safe';
+import { createSafe, getSafe, createSafeTransaction } from '../../utils/safe';
 import { getSafesByUserFromPB, addSafeToPB } from '../../utils/polybase';
 import { WEB3AUTH_CLIENT_ID } from '../../keys';
 import { NETWORK } from '../../network';
 
 import 'antd/dist/reset.css';
 import TransferForm from '../../components/TransferForm';
+import SafeTransferForm from '../../components/SafeTransferForm';
 
 const { Header, Content, Sider } = Layout;
 
@@ -166,17 +167,12 @@ const Dashboard = () => {
                 </p>
               ))}
               <Divider orientation="left">Transfer</Divider>
-              <Form layout="vertical" >
-                <Form.Item label="To">
-                  <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)} />
-                </Form.Item>
-                <Form.Item label="Amount">
-                  <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
-                </Form.Item>
-                <Button onClick={() => executeSafeTransaction(to, amount, safeSdk, signer, safeAddress, messageApi)} type="primary" disabled={!to || !amount}>
-                  Send
-                </Button>
-              </Form>
+              <SafeTransferForm
+                safeSdk={safeSdk}
+                safeAddress={safeAddress}
+                messageApi={messageApi}
+                walletAddress={walletAddress}
+                signer={signer} />
             </>
           : <>
               <Divider orientation="left">Existing Safes</Divider>
