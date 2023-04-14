@@ -7,6 +7,7 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
   const [to, setTo] = useState();
   const [amount, setAmount] = useState();
   const [gas, setGas] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     findGasPrice();
@@ -15,6 +16,17 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
   const findGasPrice = async() => {
     const price = await getGasPrice();
     setGas(price.toString());
+  }
+
+  const handleSubmit = async() => {
+    try {
+      setLoading(true);
+      await sendETH(to, amount, walletAddress, signer, messageApi);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   }
 
   return (
@@ -33,7 +45,7 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
 
         {gas && <p>Fee: {gas / 10 ** 15} MATIC</p>}
         
-        <Button onClick={() => sendETH(to, amount, walletAddress, signer, messageApi)} type="primary" disabled={!to || !amount}>
+        <Button onClick={handleSubmit} type="primary" disabled={!to || !amount} loading={loading}>
           Send
         </Button>
       </Form>
