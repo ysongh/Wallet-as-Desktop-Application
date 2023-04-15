@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 
 import { getGasPrice, sendETH } from '../utils/auth';
+import { addTransactionToPB } from '../utils/polybase';
 
 const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
   const [to, setTo] = useState();
@@ -21,7 +22,8 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
   const handleSubmit = async() => {
     try {
       setLoading(true);
-      await sendETH(to, amount, walletAddress, signer, messageApi);
+      const tx = await sendETH(to, amount, walletAddress, signer, messageApi);
+      await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString());
       setLoading(false);
     } catch (error) {
       console.log(error);

@@ -56,6 +56,15 @@ export const createUserWalletToPB = async (address) => {
   }
 }
 
+export const addTransactionToPB = async (hash, address, to, amount, date) => {
+  try{
+    await db.collection("Transaction").create([hash, address, to, amount, date]); 
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 export const getSafesByUserFromPB = async (address) => {
   try{
     const data = await db.collection("UserWallet").record(address).get();

@@ -47,13 +47,15 @@ export const sendETH = async (to, amount, walletAddress, signer, messageApi) => 
   }
 
   const transaction = await signer.sendTransaction(tx);
-  console.log(transaction);
+  const data = await transaction.wait();
   
   messageApi.open({
     type: 'success',
     content: `Send ${amount} MATIC success`,
     duration: 20,
   });
+
+  return data;
 }
 
 export const getGasPrice = async () => {
