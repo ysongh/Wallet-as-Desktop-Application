@@ -6,7 +6,7 @@ import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 import { stepsItems } from '../../utils/antdesign';
 import { loginSafe, logoutSafe } from '../../utils/auth';
 import { createSafe, getSafe, createSafeTransaction } from '../../utils/safe';
-import { getSafesByUserFromPB, addSafeToPB } from '../../utils/polybase';
+import { createUserWalletCollection, createUserWalletToPB, getSafesByUserFromPB, addSafeToPB } from '../../utils/polybase';
 import { WEB3AUTH_CLIENT_ID } from '../../keys';
 import { NETWORK } from '../../network';
 
@@ -110,7 +110,7 @@ const Dashboard = () => {
         <Tag color="purple" style={{ marginBottom: '1rem' }}>{NETWORK[network].networkName}</Tag>
         <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} {NETWORK[network].tokenSymbol}</p>
-        {/* <Button onClick={() => fundWallet(walletAddress)} type="primary" style={{ marginBottom: '2rem' }}>
+        {/* <Button onClick={() => addSafeToPB()} type="primary" style={{ marginBottom: '2rem' }}>
           Add Fund
         </Button> */}
       </div>

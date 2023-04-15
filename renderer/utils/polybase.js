@@ -1,7 +1,7 @@
 import { Polybase } from "@polybase/client";
 
 const db = new Polybase({
-  defaultNamespace: "desktopwallet1",
+  defaultNamespace: "desktopwallet2",
 });
 
 export const createUserWalletCollection = async () => {
@@ -21,8 +21,25 @@ export const createUserWalletCollection = async () => {
           this.safes.push(safe);
         }
       }
+
+      @public
+      collection Transaction {
+        id: string;
+        from: string;
+        to: string;
+        amount: string;
+        date: string;
+
+        constructor (id: string, from: string, to: string, amount: string, date: string) {
+          this.id = id;
+          this.from = from;
+          this.to = to;
+          this.amount = amount;
+          this.date = date;
+        }
+      }
     `,
-      "desktopwallet1"
+      "desktopwallet2"
     );
   } catch (error) {
     console.log(error);
