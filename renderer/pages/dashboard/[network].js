@@ -6,7 +6,7 @@ import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 import { stepsItems } from '../../utils/antdesign';
 import { loginSafe, logoutSafe } from '../../utils/auth';
 import { createSafe, getSafe, createSafeTransaction } from '../../utils/safe';
-import { createUserWalletCollection, createUserWalletToPB, getSafesByUserFromPB, addSafeToPB } from '../../utils/polybase';
+import { createUserWalletCollection, createUserWalletToPB, getSafesByUserFromPB, getTransactionsByUserFromPB, addSafeToPB } from '../../utils/polybase';
 import { WEB3AUTH_CLIENT_ID } from '../../keys';
 import { NETWORK } from '../../network';
 
@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [safeSdk, setSafeSdk] = useState(null);
   const [safeAddress, setSafeAddress] = useState();
   const [userData, setUserData] = useState();
+  const [transactions, setTransactions] = useState([]);
   
   const [currentTab, setCurrentTab] = useState("Overview");
   const [currentStep, setCurrentStep] = useState(0);
@@ -96,6 +97,11 @@ const Dashboard = () => {
     setEnterOwners(ownerAddresses);
   }
 
+  const getTransactions = async () => {
+    const data = await getTransactionsByUserFromPB(walletAddress);
+    setTransactions(data);
+  }
+
   const handleAddOwner = async () => {
     setEnterOwners([...enterOwners, to]);
     setTo("");
@@ -110,7 +116,7 @@ const Dashboard = () => {
         <Tag color="purple" style={{ marginBottom: '1rem' }}>{NETWORK[network].networkName}</Tag>
         <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} {NETWORK[network].tokenSymbol}</p>
-        {/* <Button onClick={() => addSafeToPB()} type="primary" style={{ marginBottom: '2rem' }}>
+        {/* <Button onClick={() => getTransactionsByUserFromPB()} type="primary" style={{ marginBottom: '2rem' }}>
           Add Fund
         </Button> */}
       </div>
@@ -141,17 +147,14 @@ const Dashboard = () => {
     return (
       <div>
         <Card title="Transaction">
-          <Card type="inner" title="Send" extra={<a href="#">0x0</a>}>
-            From 0x0, 04/12. 3 MATIC
-          </Card>
-          <Card
-            style={{ marginTop: 16 }}
-            type="inner"
-            title="Inner Card title"
-            extra={<a href="#">More</a>}
-          >
-            Inner Card content
-          </Card>
+          <Button onClick={getTransactions} type="primary" style={{ marginBottom: '2rem' }}>
+            Refresh
+          </Button>
+          {transactions.map(t => (
+            <Card key={t.data.id} type="inner" title="Send" extra={<a href="#">{t.data.id}</a>}>
+              To {t.data.to}, {t.data.date}, {t.data.amount}, MATIC
+            </Card>
+          ))}
         </Card>
       </div>
     )

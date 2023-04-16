@@ -87,3 +87,14 @@ export const addSafeToPB = async (address, safeAddress) => {
     return null;
   }
 }
+
+export const getTransactionsByUserFromPB = async (address) => {
+  try{
+    const data = await db.collection("Transaction").where("from", "==", address).get();
+    console.log(data.data);
+    return data.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
