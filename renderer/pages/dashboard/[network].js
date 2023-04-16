@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Layout, Menu,Button, Form, Input, Typography, Divider, Steps, QRCode, Tag, message } from 'antd';
+import { Layout, Menu,Button, Card, Form, Input, Typography, Divider, Steps, QRCode, Tag, message } from 'antd';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 
 import { stepsItems } from '../../utils/antdesign';
@@ -134,6 +134,26 @@ const Dashboard = () => {
         
         <p>{walletAddress}</p>
       </>
+    )
+  }
+
+  const Transaction = () => {
+    return (
+      <div>
+        <Card title="Transaction">
+          <Card type="inner" title="Send" extra={<a href="#">0x0</a>}>
+            From 0x0, 04/12. 3 MATIC
+          </Card>
+          <Card
+            style={{ marginTop: 16 }}
+            type="inner"
+            title="Inner Card title"
+            extra={<a href="#">More</a>}
+          >
+            Inner Card content
+          </Card>
+        </Card>
+      </div>
     )
   }
 
@@ -312,6 +332,9 @@ const Dashboard = () => {
             <Menu.Item key="Receive">
               Receive
             </Menu.Item>
+            <Menu.Item key="Transaction">
+              Transaction
+            </Menu.Item>
             <Menu.Item key="Safe">
               Safe
             </Menu.Item>
@@ -328,6 +351,7 @@ const Dashboard = () => {
             {currentTab === "Overview" && <Overview />}
             {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} />}
             {currentTab === "Receive" && <Receive />}
+            {currentTab === "Transaction" && <Transaction />}
             {currentTab === "Safe" && <Safe />}
             {currentTab === "CreateSafe" && <CreateSafe />}
           </Content>
