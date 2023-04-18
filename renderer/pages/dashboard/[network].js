@@ -7,6 +7,7 @@ import { stepsItems } from '../../utils/antdesign';
 import { loginSafe, logoutSafe } from '../../utils/auth';
 import { createSafe, getSafe, createSafeTransaction } from '../../utils/safe';
 import { createUserWalletCollection, createUserWalletToPB, getSafesByUserFromPB, getTransactionsByUserFromPB, addSafeToPB } from '../../utils/polybase';
+import { formatAddress, formatTransactionHash } from '../../utils/format';
 import { WEB3AUTH_CLIENT_ID } from '../../keys';
 import { NETWORK } from '../../network';
 
@@ -151,8 +152,8 @@ const Dashboard = () => {
             Refresh
           </Button>
           {transactions.map(t => (
-            <Card key={t.data.id} type="inner" title="Send" extra={<a href="#">{t.data.id}</a>}>
-              To {t.data.to}, {t.data.date}, {t.data.amount}, MATIC
+            <Card key={t.data.id} type="inner" title="Send" extra={<a href="#">{formatTransactionHash(t.data.id)}</a>}>
+              To {formatAddress(t.data.to)}, {t.data.date}, {t.data.amount} MATIC
             </Card>
           ))}
         </Card>
