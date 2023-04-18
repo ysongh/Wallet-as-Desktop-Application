@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Layout, Menu,Button, Card, Form, Input, Typography, Divider, Steps, QRCode, Tag, message } from 'antd';
+import { Layout, Menu,Button, Card, Form, Input, Typography, Divider, Steps, Tag, message } from 'antd';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 
 import { stepsItems } from '../../utils/antdesign';
@@ -12,6 +12,7 @@ import { WEB3AUTH_CLIENT_ID } from '../../keys';
 import { NETWORK } from '../../network';
 
 import 'antd/dist/reset.css';
+import Receive from '../../components/Receive';
 import TransferForm from '../../components/TransferForm';
 import SafeTransferForm from '../../components/SafeTransferForm';
 
@@ -121,26 +122,6 @@ const Dashboard = () => {
           Add Fund
         </Button> */}
       </div>
-    )
-  }
-
-  const Receive = () => {
-    return (
-      <>
-        <Typography.Title level={2}>
-          Receive
-        </Typography.Title>
-       
-        <QRCode
-          value={walletAddress}
-          color="blue"
-          style={{
-            marginBottom: 16,
-          }}
-        />
-        
-        <p>{walletAddress}</p>
-      </>
     )
   }
 
@@ -354,7 +335,7 @@ const Dashboard = () => {
           >
             {currentTab === "Overview" && <Overview />}
             {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} />}
-            {currentTab === "Receive" && <Receive />}
+            {currentTab === "Receive" && <Receive walletAddress={walletAddress} />}
             {currentTab === "Transaction" && <Transaction />}
             {currentTab === "Safe" && <Safe />}
             {currentTab === "CreateSafe" && <CreateSafe />}
