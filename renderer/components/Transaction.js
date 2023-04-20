@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Button } from 'antd';
 
 import { formatAddress, formatTransactionHash } from '../utils/format';
@@ -6,6 +6,10 @@ import { getTransactionsByUserFromPB } from '../utils/polybase';
 
 const Transaction = ({ walletAddress }) => {
   const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    getTransactions();
+  }, [])
 
   const getTransactions = async () => {
     const data = await getTransactionsByUserFromPB(walletAddress);
