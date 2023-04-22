@@ -32,7 +32,7 @@ const Home = () => {
       <Select
         placeholder="Select a Network"
         style={{
-          width: 120,
+          width: 200,
         }}
         onChange={handleChange}
         options={NETWORK_LIST}
