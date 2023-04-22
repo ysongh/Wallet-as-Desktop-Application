@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Layout, Menu, Button, Form, Input, Typography, Divider, Steps, Tag, message } from 'antd';
+import { Layout, Menu, Button, Form, Input, Typography, Steps, Tag, message } from 'antd';
 import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
 
 import { stepsItems } from '../../utils/antdesign';
@@ -14,7 +14,7 @@ import 'antd/dist/reset.css';
 import Receive from '../../components/Receive';
 import TransferForm from '../../components/TransferForm';
 import Transaction from '../../components/Transaction';
-import SafeTransferForm from '../../components/SafeTransferForm';
+import Safe from '../../components/Safe';
 
 const { Header, Content, Sider } = Layout;
 
@@ -26,7 +26,6 @@ const Dashboard = () => {
 
   const [walletAddress, setWalletAddress] = useState();
   const [balance, setBalance] = useState();
-  const [safeBalance, setSafeBalance] = useState(0);
   const [safeAuth, setSafeAuth] = useState();
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -38,7 +37,6 @@ const Dashboard = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [to, setTo] = useState();
   const [amount, setAmount] = useState();
-  const [enterSafeAddress, setEnterSafeAddress] = useState();
   const [enterOwners, setEnterOwners] = useState([]);
 
   useEffect(() => {
@@ -90,14 +88,6 @@ const Dashboard = () => {
     setCurrentTab("Safe");
   }
 
-  const findSafe = async (safeAddress) => {
-    const { sSdk, sAddress, balance, ownerAddresses } = await getSafe(signer, safeAddress);
-    setSafeSdk(sSdk);
-    setSafeAddress(sAddress);
-    setSafeBalance(balance);
-    setEnterOwners(ownerAddresses);
-  }
-
   const handleAddOwner = async () => {
     setEnterOwners([...enterOwners, to]);
     setTo("");
@@ -116,67 +106,6 @@ const Dashboard = () => {
           Add Fund
         </Button> */}
       </div>
-    )
-  }
-
-  const Safe = () => {
-    return (
-      <>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography.Title level={2}>
-            Safe
-          </Typography.Title>
-          {safeAddress && <Button onClick={() => setSafeAddress(null)} type="primary" style={{ marginBottom: '2rem' }}>
-            Exit
-          </Button>}
-        </div>
-        
-        
-        {safeAddress
-          ? <>
-              <p>{safeAddress}</p>
-              <p>{safeBalance / 10 ** 18} {NETWORK[network].tokenSymbol}</p>
-              <div id='stripe-root'></div>
-              <Typography.Title level={4}>
-                Owners
-              </Typography.Title>
-              {enterOwners.map((o, index) => (
-                <p key={index}>
-                  {index + 1} -
-                  <Tag color="cyan">
-                    {o}
-                  </Tag>
-                </p>
-              ))}
-              <Divider orientation="left">Transfer</Divider>
-              <SafeTransferForm
-                safeSdk={safeSdk}
-                safeAddress={safeAddress}
-                messageApi={messageApi}
-                walletAddress={walletAddress}
-                signer={signer} />
-            </>
-          : <>
-              <Divider orientation="left">Existing Safes</Divider>
-              {userData?.safes?.map(s => (
-                <Tag key={s} color="cyan" onClick={() => findSafe(s)} style={{ cursor: "pointer" }}>
-                  {s}
-                </Tag>
-              ))}
-              <Divider orientation="left">Search for Safes</Divider>
-              <Form.Item label="Safe Address">
-                <Input placeholder="0x0" value={enterSafeAddress} onChange={(e) => setEnterSafeAddress(e.target.value)}/>
-              </Form.Item>
-              <Button onClick={() => findSafe(enterSafeAddress)} type="primary">
-                Find
-              </Button>
-              <Divider orientation="left">Don't have one?</Divider>
-              <Button onClick={() => setCurrentTab("CreateSafe")} type="primary">
-                Create
-              </Button>
-            </>
-        }
-      </>
     )
   }
 
@@ -314,7 +243,7 @@ const Dashboard = () => {
             {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} />}
             {currentTab === "Receive" && <Receive walletAddress={walletAddress} />}
             {currentTab === "Transaction" && <Transaction />}
-            {currentTab === "Safe" && <Safe />}
+            {currentTab === "Safe" && <Safe signer={signer} userData={userData} network={network} messageApi={messageApi}/>}
             {currentTab === "CreateSafe" && <CreateSafe />}
           </Content>
         </Layout>
