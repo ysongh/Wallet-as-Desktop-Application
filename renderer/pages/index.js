@@ -39,7 +39,7 @@ const Home = () => {
       />
       <br />
       <br />
-      <Button onClick={() => router.push(`/dashboard/${networkName}`)} type="primary" size='large'>
+      <Button onClick={() => router.push(`/dashboard/${networkName}`)} type="primary" size='large' disabled={!networkName}>
         Login
       </Button>
     </center>
