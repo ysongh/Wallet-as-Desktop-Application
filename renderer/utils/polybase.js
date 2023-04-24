@@ -1,7 +1,7 @@
 import { Polybase } from "@polybase/client";
 
 const db = new Polybase({
-  defaultNamespace: "desktopwallet2",
+  defaultNamespace: "desktopwallet3",
 });
 
 export const createUserWalletCollection = async () => {
@@ -29,17 +29,19 @@ export const createUserWalletCollection = async () => {
         to: string;
         amount: string;
         date: string;
+        type: string;
 
-        constructor (id: string, from: string, to: string, amount: string, date: string) {
+        constructor (id: string, from: string, to: string, amount: string, date: string, type: string) {
           this.id = id;
           this.from = from;
           this.to = to;
           this.amount = amount;
           this.date = date;
+          this.type = type;
         }
       }
     `,
-      "desktopwallet2"
+      "desktopwallet3"
     );
   } catch (error) {
     console.log(error);
@@ -56,9 +58,9 @@ export const createUserWalletToPB = async (address) => {
   }
 }
 
-export const addTransactionToPB = async (hash, address, to, amount, date) => {
+export const addTransactionToPB = async (hash, address, to, amount, date, type) => {
   try{
-    await db.collection("Transaction").create([hash, address, to, amount, date]); 
+    await db.collection("Transaction").create([hash, address, to, amount, date, type]); 
   } catch (error) {
     console.log(error);
     return null;

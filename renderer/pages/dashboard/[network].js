@@ -102,7 +102,7 @@ const Dashboard = () => {
         <Tag color="purple" style={{ marginBottom: '1rem' }}>{NETWORK[network].networkName}</Tag>
         <p>{walletAddress}</p>
         <p>{balance / 10 ** 18} {NETWORK[network].tokenSymbol}</p>
-        {/* <Button onClick={() => getTransactionsByUserFromPB()} type="primary" style={{ marginBottom: '2rem' }}>
+        {/* <Button onClick={() => createUserWalletToPB("")} type="primary" style={{ marginBottom: '2rem' }}>
           Add Fund
         </Button> */}
       </div>

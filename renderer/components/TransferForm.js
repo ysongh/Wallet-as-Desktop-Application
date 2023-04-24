@@ -23,7 +23,7 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
     try {
       setLoading(true);
       const tx = await sendETH(to, amount, walletAddress, signer, messageApi);
-      await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString());
+      await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString(), "Send");
       setLoading(false);
     } catch (error) {
       console.log(error);
