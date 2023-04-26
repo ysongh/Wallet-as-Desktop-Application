@@ -7,6 +7,7 @@ import { stepsItems } from '../../utils/antdesign';
 import { loginSafe, logoutSafe } from '../../utils/auth';
 import { createSafe, getSafe, createSafeTransaction } from '../../utils/safe';
 import { createUserWalletCollection, createUserWalletToPB, getSafesByUserFromPB, addSafeToPB } from '../../utils/polybase';
+import { initializingSuperfluid } from '../../utils/superfluid';
 import { WEB3AUTH_CLIENT_ID } from '../../keys';
 import { NETWORK } from '../../network';
 
@@ -32,6 +33,7 @@ const Dashboard = () => {
   const [safeSdk, setSafeSdk] = useState(null);
   const [safeAddress, setSafeAddress] = useState();
   const [userData, setUserData] = useState();
+  const [sfSdk, setSfSdk] = useState(null);
   
   const [currentTab, setCurrentTab] = useState("Overview");
   const [currentStep, setCurrentStep] = useState(0);
@@ -72,6 +74,8 @@ const Dashboard = () => {
     setBalance(ethbalance);
     const data = await getSafesByUserFromPB(address);
     setUserData(data);
+    const sf = await initializingSuperfluid(userSigner);
+    setSfSdk(sf);
   }
 
   const logout = async () => {
