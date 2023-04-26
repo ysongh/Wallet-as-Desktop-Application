@@ -1,13 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 
-const Streaming = () => {
+import { getfDAIxBalance } from '../utils/superfluid';
+
+const Streaming = ({ sfSdk, signer, walletAddress }) => {
   const [amount, setAmount] = useState();
   const [loading, setLoading] = useState(false);
+  const [fdaixbalance, setFdaixbalance] = useState(0);
+
+  useEffect(() => {
+    getfDAIx();
+  }, [])
+  
+  const getfDAIx = async() => {
+    const balance = await getfDAIxBalance(sfSdk, signer, walletAddress);
+    setFdaixbalance(balance.toString());
+  }
 
   const handleSubmit = async() => {
     try {
       setLoading(true);
+     
      
       setLoading(false);
     } catch (error) {
@@ -21,6 +34,7 @@ const Streaming = () => {
       <Typography.Title level={2}>
         Streaming
       </Typography.Title>
+      <p>Balance {fdaixbalance} fDAIx</p>
       <Form layout="vertical">
         <Form.Item label="Amount">
           <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
