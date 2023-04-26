@@ -16,6 +16,7 @@ import Receive from '../../components/Receive';
 import TransferForm from '../../components/TransferForm';
 import Transaction from '../../components/Transaction';
 import Safe from '../../components/Safe';
+import Streaming from '../../components/Streaming';
 
 const { Header, Content, Sider } = Layout;
 
@@ -227,6 +228,9 @@ const Dashboard = () => {
             <Menu.Item key="Receive">
               Receive
             </Menu.Item>
+            <Menu.Item key="Streaming">
+              Streaming
+            </Menu.Item>
             <Menu.Item key="Transaction">
               Transaction
             </Menu.Item>
@@ -247,6 +251,7 @@ const Dashboard = () => {
             {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} />}
             {currentTab === "Receive" && <Receive walletAddress={walletAddress} />}
             {currentTab === "Transaction" && <Transaction />}
+            {currentTab === "Streaming" && <Streaming />}
             {currentTab === "Safe" && <Safe signer={signer} userData={userData} network={network} messageApi={messageApi}/>}
             {currentTab === "CreateSafe" && <CreateSafe />}
           </Content>
