@@ -8,6 +8,7 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
   const [loading, setLoading] = useState(false);
   const [fdaixbalance, setFdaixbalance] = useState(0);
   const [daiBalance, setDaiBalance] = useState(0);
+  const [isApprove, setIsApprove] = useState(false);
 
   useEffect(() => {
     getDAI();
@@ -24,11 +25,24 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
     setDaiBalance(balance.toString());
   }
 
-  const handleSubmit = async() => {
+  const approveDAI = async() => {
     try {
       setLoading(true);
      
       await approveDAITokens(sfSdk, signer, amount);
+      setIsApprove(true);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }
+
+  const updateDAI = async() => {
+    try {
+      setLoading(true);
+     
       await upgradeDAIToDAIx(sfSdk, signer, amount);
 
       setLoading(false);
@@ -49,11 +63,15 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
       <p>{daiBalance} DAI</p>
       <p>{fdaixbalance} fDAIx</p>
       <Form layout="vertical">
-        <Form.Item label="Amount">
+        <Form.Item label="Amount to upgrade DAI to DAIx">
           <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
         </Form.Item>
+
+        <Button onClick={approveDAI} type="primary" disabled={!amount || isApprove} loading={loading}>
+          Approve
+        </Button>
         
-        <Button onClick={handleSubmit} type="primary" disabled={!amount} loading={loading}>
+        <Button onClick={updateDAI} type="primary" disabled={!amount || !isApprove} loading={loading}>
           Upgrade
         </Button>
       </Form>
