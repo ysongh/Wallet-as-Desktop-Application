@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 
-import { getfDAIxBalance, approveDAITokens } from '../utils/superfluid';
+import { getfDAIxBalance, approveDAITokens, upgradeDAIToDAIx } from '../utils/superfluid';
 
 const Streaming = ({ sfSdk, signer, walletAddress }) => {
   const [amount, setAmount] = useState();
@@ -22,6 +22,7 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
       setLoading(true);
      
       await approveDAITokens(sfSdk, signer, amount);
+      await upgradeDAIToDAIx(sfSdk, signer, amount);
 
       setLoading(false);
     } catch (error) {

@@ -62,3 +62,38 @@ export async function approveDAITokens(sf, signer, amount) {
     console.error(error);
   }
 }
+
+export const upgradeDAIToDAIx = async (sf, signer, amount) => {
+  const superSigner = sf.createSigner({ signer: signer });
+
+  console.log(signer);
+  console.log(await superSigner.getAddress());
+  const daix = await sf.loadSuperToken("fDAIx");
+
+  console.log(daix);
+
+  try {
+    const upgradeOperation = daix.upgrade({
+      amount: ethers.utils.parseEther(amount.toString())
+    });
+
+    console.log("Upgrading...");
+
+    await upgradeOperation.exec(signer);
+
+    console.log(
+      `Congrats - you've just upgraded your tokens to an Index!
+         Network: Mumbai
+         Super Token: DAIx
+         Amount: ${amount}         
+      `
+    );
+
+    console.log(
+      `Congrats - you've just distributed to your index!
+    `
+    );
+  } catch(error){
+    console.error(error);
+  }
+}
