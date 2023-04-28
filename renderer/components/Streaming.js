@@ -1,20 +1,27 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 
-import { getfDAIxBalance, approveDAITokens, upgradeDAIToDAIx } from '../utils/superfluid';
+import { getDAIBalance, getfDAIxBalance, approveDAITokens, upgradeDAIToDAIx } from '../utils/superfluid';
 
 const Streaming = ({ sfSdk, signer, walletAddress }) => {
   const [amount, setAmount] = useState();
   const [loading, setLoading] = useState(false);
   const [fdaixbalance, setFdaixbalance] = useState(0);
+  const [daiBalance, setDaiBalance] = useState(0);
 
   useEffect(() => {
+    getDAI();
     getfDAIx();
   }, [])
   
   const getfDAIx = async() => {
     const balance = await getfDAIxBalance(sfSdk, signer, walletAddress);
     setFdaixbalance(balance.toString());
+  }
+
+  const getDAI = async() => {
+    const balance = await getDAIBalance(signer, walletAddress);
+    setDaiBalance(balance.toString());
   }
 
   const handleSubmit = async() => {
@@ -36,7 +43,11 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
       <Typography.Title level={2}>
         Streaming
       </Typography.Title>
-      <p>Balance {fdaixbalance} fDAIx</p>
+      <Typography.Title level={4}>
+        Balance
+      </Typography.Title>
+      <p>{daiBalance} DAI</p>
+      <p>{fdaixbalance} fDAIx</p>
       <Form layout="vertical">
         <Form.Item label="Amount">
           <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>

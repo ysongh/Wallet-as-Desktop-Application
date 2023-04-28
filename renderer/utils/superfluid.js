@@ -3,6 +3,9 @@ import { ethers } from 'ethers';
 
 import { daiABI } from "../daiABI";
 
+const DAI_ADDRESS = "0x15F0Ca26781C3852f8166eD2ebce5D18265cceb7";
+const DAIX_ADDRESS = "0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f";
+
 export const initializingSuperfluid = async (signer) => {
   try{
     const sf = await Framework.create({
@@ -34,21 +37,39 @@ export const getfDAIxBalance = async (sf, signer, address) => {
   }
 }
 
+export const getDAIBalance = async (signer, address) => {
+  try{
+    const DAI = new ethers.Contract(
+      DAI_ADDRESS,
+      daiABI,
+      signer
+    );
+
+    const balance = await DAI.balanceOf(address);
+    console.log(balance);
+    return (balance / 10 ** 18);
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+
 export async function approveDAITokens(sf, signer, amount) {
   const superSigner = sf.createSigner({ signer: signer });
 
   console.log(signer);
   console.log(await superSigner.getAddress());
   const DAI = new ethers.Contract(
-    "0x15F0Ca26781C3852f8166eD2ebce5D18265cceb7",
+    DAI_ADDRESS,
     daiABI,
     signer
   );
-  console.log(amount)
+
   try {
     console.log("approving DAI spend");
     await DAI.approve(
-      "0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f",
+      DAIX_ADDRESS,
       ethers.utils.parseEther(amount.toString())
     ).then(function (tx) {
       console.log(
