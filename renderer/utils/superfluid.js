@@ -2,6 +2,7 @@ import { Framework } from "@superfluid-finance/sdk-core";
 import { ethers } from 'ethers';
 
 import { daiABI } from "../daiABI";
+import { addTransactionToPB } from "./polybase";
 
 const DAI_ADDRESS = "0x15F0Ca26781C3852f8166eD2ebce5D18265cceb7";
 const DAIX_ADDRESS = "0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f";
@@ -98,14 +99,16 @@ export async function approveDAITokens(sf, signer, amount) {
 
   try {
     console.log("approving DAI spend");
-    await DAI.approve(
+    const transaction =  await DAI.approve(
       DAIX_ADDRESS,
       ethers.utils.parseEther(amount.toString())
-    ).then(function (tx) {
-      console.log(
-        `Congrats, you just approved your DAI spend. You can see this tx at https://mumbai.polygonscan.com/tx/${tx.hash}`
-      );
-    });
+    )
+    const tx = await transaction.wait();
+    console.log(tx);
+    console.log(
+      `Congrats, you just approved your DAI spend. You can see this tx at https://mumbai.polygonscan.com/tx/${tx.hash}`
+    );
+    await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString(), "Approval");
   } catch (error) {
     console.log(
       "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
