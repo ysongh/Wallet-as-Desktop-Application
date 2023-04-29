@@ -54,6 +54,36 @@ export const getDAIBalance = async (signer, address) => {
   }
 }
 
+export async function transferDAITokens(sf, signer, amount, to) {
+  const superSigner = sf.createSigner({ signer: signer });
+
+  console.log(signer);
+  console.log(await superSigner.getAddress());
+  const DAI = new ethers.Contract(
+    DAI_ADDRESS,
+    daiABI,
+    signer
+  );
+
+  try {
+
+    console.log(DAI);
+    await DAI.transfer(
+      to,
+      ethers.utils.parseEther(amount.toString())
+    ).then(function (tx) {
+      console.log(
+        `Congrats, you just transfer your DAI. You can see this tx at https://mumbai.polygonscan.com/tx/${tx.hash}`
+      );
+    });
+  } catch (error) {
+    console.log(
+      "Hmmm, your transaction threw an error."
+    );
+    console.error(error);
+  }
+}
+
 
 export async function approveDAITokens(sf, signer, amount) {
   const superSigner = sf.createSigner({ signer: signer });

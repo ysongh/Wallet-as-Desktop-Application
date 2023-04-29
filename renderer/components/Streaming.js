@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 
-import { getDAIBalance, getfDAIxBalance, approveDAITokens, upgradeDAIToDAIx, streamDAIx } from '../utils/superfluid';
+import { getDAIBalance, getfDAIxBalance, approveDAITokens, upgradeDAIToDAIx, streamDAIx, transferDAITokens } from '../utils/superfluid';
 
 const Streaming = ({ sfSdk, signer, walletAddress }) => {
   const [amount, setAmount] = useState();
@@ -103,12 +103,15 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
           <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)}/>
         </Form.Item>
 
-        <Form.Item label="Amount to upgrade DAI to DAIx">
+        <Form.Item label="Flow Rate">
           <Input placeholder="0" value={amountToStream} onChange={(e) => setAmountToStream(e.target.value)}/>
         </Form.Item>
 
         <Button onClick={stream} type="primary" disabled={!to || !amountToStream} loading={loading}>
           Stream
+        </Button>
+        <Button onClick={() => transferDAITokens(sfSdk, signer, amountToStream, to)} type="primary" loading={loading}>
+          Transfer
         </Button>
       </Form>
     </div>
