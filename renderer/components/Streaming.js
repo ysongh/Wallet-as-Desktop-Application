@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 
-import { getDAIBalance, getfDAIxBalance, approveDAITokens, upgradeDAIToDAIx } from '../utils/superfluid';
+import { getDAIBalance, getfDAIxBalance, approveDAITokens, upgradeDAIToDAIx, streamDAIx } from '../utils/superfluid';
 
 const Streaming = ({ sfSdk, signer, walletAddress }) => {
   const [amount, setAmount] = useState();
@@ -9,6 +9,8 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
   const [fdaixbalance, setFdaixbalance] = useState(0);
   const [daiBalance, setDaiBalance] = useState(0);
   const [isApprove, setIsApprove] = useState(false);
+  const [to, setTo] = useState();
+  const [amountToStream, setAmountToStream] = useState(0);
 
   useEffect(() => {
     getDAI();
@@ -52,6 +54,19 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
     }
   }
 
+  const stream = async() => {
+    try {
+      setLoading(true);
+     
+      await streamDAIx(sfSdk, signer, walletAddress, amountToStream, to);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }
+
   return (
     <div>
       <Typography.Title level={2}>
@@ -73,6 +88,27 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
         
         <Button onClick={updateDAI} type="primary" disabled={!amount || !isApprove} loading={loading}>
           Upgrade
+        </Button>
+      </Form>
+
+      <br />
+      <br />
+
+      <Typography.Title level={4}>
+        Stream
+      </Typography.Title>
+
+      <Form layout="vertical">
+        <Form.Item label="Address to stream">
+          <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)}/>
+        </Form.Item>
+
+        <Form.Item label="Amount to upgrade DAI to DAIx">
+          <Input placeholder="0" value={amountToStream} onChange={(e) => setAmountToStream(e.target.value)}/>
+        </Form.Item>
+
+        <Button onClick={stream} type="primary" disabled={!to || !amountToStream} loading={loading}>
+          Stream
         </Button>
       </Form>
     </div>
