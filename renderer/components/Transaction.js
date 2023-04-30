@@ -24,7 +24,7 @@ const Transaction = ({ walletAddress }) => {
         </Button>
         {transactions.map(t => (
           <Card key={t.data.id} type="inner" title={t.data.type} extra={<a href="#">{formatTransactionHash(t.data.id)}</a>}>
-            To {formatAddress(t.data.to)}, {t.data.date}, {t.data.amount} MATIC
+            To {formatAddress(t.data.to)}, {t.data.date}, {t.data.amount} {t.data.token}
           </Card>
         ))}
       </Card>

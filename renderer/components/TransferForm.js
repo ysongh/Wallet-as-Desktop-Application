@@ -3,8 +3,9 @@ import { Button, Form, Input, Typography } from 'antd';
 
 import { getGasPrice, sendETH } from '../utils/auth';
 import { addTransactionToPB } from '../utils/polybase';
+import { NETWORK } from '../network';
 
-const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
+const TransferForm = ({ balance, walletAddress, messageApi, signer, network }) => {
   const [to, setTo] = useState();
   const [amount, setAmount] = useState();
   const [gas, setGas] = useState();
@@ -23,7 +24,7 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer }) => {
     try {
       setLoading(true);
       const tx = await sendETH(to, amount, walletAddress, signer, messageApi);
-      await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString(), "Send");
+      await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString(), "Send", NETWORK[network].tokenSymbol);
       setLoading(false);
     } catch (error) {
       console.log(error);

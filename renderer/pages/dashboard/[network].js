@@ -248,7 +248,7 @@ const Dashboard = () => {
             }}
           >
             {currentTab === "Overview" && <Overview />}
-            {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} />}
+            {currentTab === "Send" && <TransferForm balance={balance} messageApi={messageApi} walletAddress={walletAddress} signer={signer} network={network} />}
             {currentTab === "Receive" && <Receive walletAddress={walletAddress} />}
             {currentTab === "Transaction" && <Transaction />}
             {currentTab === "Streaming" && <Streaming sfSdk={sfSdk} signer={signer} walletAddress={walletAddress} />}
