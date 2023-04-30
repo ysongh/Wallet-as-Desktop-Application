@@ -140,7 +140,8 @@ export const upgradeDAIToDAIx = async (sf, signer, amount, messageApi) => {
 
     console.log("Upgrading...");
 
-    await upgradeOperation.exec(signer);
+    const transaction = await upgradeOperation.exec(signer);
+    const tx = await transaction.wait();
 
     console.log(
       `Congrats - you've just upgraded your tokens to an Index!
@@ -158,6 +159,7 @@ export const upgradeDAIToDAIx = async (sf, signer, amount, messageApi) => {
       content: `Upgraded ${amount} DAI to DAIx`,
       duration: 20,
     });
+    await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString(), "Upgrade", "DAI");
   } catch(error){
     console.error(error);
   }
