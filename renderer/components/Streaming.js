@@ -3,7 +3,7 @@ import { Button, Form, Input, Typography } from 'antd';
 
 import { getDAIBalance, getfDAIxBalance, approveDAITokens, upgradeDAIToDAIx, streamDAIx, transferDAITokens } from '../utils/superfluid';
 
-const Streaming = ({ sfSdk, signer, walletAddress }) => {
+const Streaming = ({ sfSdk, signer, walletAddress, messageApi }) => {
   const [amount, setAmount] = useState();
   const [loading, setLoading] = useState(false);
   const [fdaixbalance, setFdaixbalance] = useState(0);
@@ -31,7 +31,7 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
     try {
       setLoading(true);
      
-      await approveDAITokens(sfSdk, signer, amount);
+      await approveDAITokens(sfSdk, signer, amount, messageApi);
       setIsApprove(true);
 
       setLoading(false);
@@ -45,7 +45,7 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
     try {
       setLoading(true);
      
-      await upgradeDAIToDAIx(sfSdk, signer, amount);
+      await upgradeDAIToDAIx(sfSdk, signer, amount, messageApi);
 
       setLoading(false);
     } catch (error) {
@@ -58,7 +58,7 @@ const Streaming = ({ sfSdk, signer, walletAddress }) => {
     try {
       setLoading(true);
      
-      await streamDAIx(sfSdk, signer, walletAddress, amountToStream, to);
+      await streamDAIx(sfSdk, signer, walletAddress, amountToStream, to, messageApi);
 
       setLoading(false);
     } catch (error) {

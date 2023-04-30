@@ -86,7 +86,7 @@ export async function transferDAITokens(sf, signer, amount, to) {
 }
 
 
-export async function approveDAITokens(sf, signer, amount) {
+export async function approveDAITokens(sf, signer, amount, messageApi) {
   const superSigner = sf.createSigner({ signer: signer });
 
   console.log(signer);
@@ -108,6 +108,13 @@ export async function approveDAITokens(sf, signer, amount) {
     console.log(
       `Congrats, you just approved your DAI spend. You can see this tx at https://mumbai.polygonscan.com/tx/${tx.hash}`
     );
+
+    messageApi.open({
+      type: 'success',
+      content: `Approved ${amount} DAI`,
+      duration: 20,
+    });
+
     await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString(), "Approval", "DAI");
   } catch (error) {
     console.log(
@@ -117,7 +124,7 @@ export async function approveDAITokens(sf, signer, amount) {
   }
 }
 
-export const upgradeDAIToDAIx = async (sf, signer, amount) => {
+export const upgradeDAIToDAIx = async (sf, signer, amount, messageApi) => {
   const superSigner = sf.createSigner({ signer: signer });
 
   console.log(signer);
@@ -144,16 +151,20 @@ export const upgradeDAIToDAIx = async (sf, signer, amount) => {
     );
 
     console.log(
-      `Congrats - you've just distributed to your index!
-    `
+      `Congrats - you've just distributed to your index!`
     );
+    messageApi.open({
+      type: 'success',
+      content: `Upgraded ${amount} DAI to DAIx`,
+      duration: 20,
+    });
   } catch(error){
     console.error(error);
   }
 }
 
 
-export const streamDAIx = async (sf, signer, from, flowrate, to) => {
+export const streamDAIx = async (sf, signer, from, flowrate, to, messageApi) => {
   const superSigner = sf.createSigner({ signer: signer });
 
   console.log(signer);
@@ -176,6 +187,12 @@ export const streamDAIx = async (sf, signer, from, flowrate, to) => {
     const result = await createFlowOperation.exec(signer);
     console.log(result);
     console.log(`See your stream at https://app.superfluid.finance/?view=${to}`);
+
+    messageApi.open({
+      type: 'success',
+      content: `Stream DAIx`,
+      duration: 20,
+    });
   } catch(error){
     console.error(error);
   }
