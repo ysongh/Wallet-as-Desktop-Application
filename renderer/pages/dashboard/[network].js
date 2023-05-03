@@ -50,10 +50,11 @@ const Dashboard = () => {
   const createInstanceAuth = async () => {
     const safeAuthKit = await SafeAuthKit.init(SafeAuthProviderType.Web3Auth, {
       chainId: NETWORK[network].chainId,
+      web3AuthNetwork: 'testnet',
       authProviderConfig: {
         rpcTarget: NETWORK[network].rpc, // Add your RPC e.g. https://goerli.infura.io/v3/<your project id>
         clientId: WEB3AUTH_CLIENT_ID, // Add your client id. Get it from the Web3Auth dashboard
-        network: 'testnet' | 'mainnet', // The network to use for the Web3Auth modal. Use 'testnet' while developing and 'mainnet' for production use
+        network: "testnet",
         theme: 'light' | 'dark', // The theme to use for the Web3Auth modal
         modalConfig: {
           // The modal config is optional and it's used to customize the Web3Auth modal
@@ -61,6 +62,7 @@ const Dashboard = () => {
         }
       }
     });
+
     setSafeAuth(safeAuthKit);
     await login(safeAuthKit);
   }
@@ -80,7 +82,7 @@ const Dashboard = () => {
   }
 
   const logout = async () => {
-    //await logoutSafe(safeAuth);
+    await logoutSafe(safeAuth);
     setProvider(null);
     router.push('/');
   }
