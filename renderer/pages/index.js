@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Layout, Menu, Button, Form, Input, Typography, Steps, Tag, message } from 'antd';
-import { SafeAuthKit, SafeAuthProviderType } from '@safe-global/auth-kit'
+import { SafeAuthKit, Web3AuthModalPack } from '@safe-global/auth-kit'
+import { CHAIN_NAMESPACES } from '@web3auth/base';
+import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 
 import { stepsItems } from '../utils/antdesign';
 import { loginSafe, logoutSafe } from '../utils/auth';
@@ -46,20 +48,41 @@ const Dashboard = () => {
   }, [])
 
   const createInstanceAuth = async () => {
-    const safeAuthKit = await SafeAuthKit.init(SafeAuthProviderType.Web3Auth, {
-      chainId: NETWORK[network].chainId,
+    // https://web3auth.io/docs/sdk/web/modal/initialize#arguments
+    const options = {
+      clientId: WEB3AUTH_CLIENT_ID,
       web3AuthNetwork: 'testnet',
-      authProviderConfig: {
-        rpcTarget: NETWORK[network].rpc, // Add your RPC e.g. https://goerli.infura.io/v3/<your project id>
-        clientId: WEB3AUTH_CLIENT_ID, // Add your client id. Get it from the Web3Auth dashboard
-        network: "testnet",
-        theme: 'light' | 'dark', // The theme to use for the Web3Auth modal
-        modalConfig: {
-          // The modal config is optional and it's used to customize the Web3Auth modal
-          // Check the Web3Auth documentation for more info: https://web3auth.io/docs/sdk/web/modal/whitelabel#initmodal
+      chainConfig: {
+        chainNamespace: CHAIN_NAMESPACES.EIP155,
+        chainId: NETWORK[network].chainId,
+        // https://chainlist.org/
+        rpcTarget: NETWORK[network].rpc
+      },
+      uiConfig: {
+        theme: 'light',
+        loginMethodsOrder: ['google', 'facebook']
+      }
+    };
+
+    // https://web3auth.io/docs/sdk/web/modal/initialize#configuring-adapters
+    const modalConfig = {}
+
+    // https://web3auth.io/docs/sdk/web/modal/whitelabel#whitelabeling-while-modal-initialization
+    const openloginAdapter = new OpenloginAdapter({
+      loginSettings: {
+        mfaLevel: 'none'
+      },
+      adapterSettings: {
+        uxMode: 'popup',
+        whiteLabel: {
+          name: 'Safe'
         }
       }
     });
+
+    const pack = new Web3AuthModalPack(options, [openloginAdapter], modalConfig);
+
+    const safeAuthKit = await SafeAuthKit.init(pack);
 
     setSafeAuth(safeAuthKit);
   }
