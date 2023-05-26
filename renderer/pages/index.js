@@ -23,10 +23,9 @@ import Landing from '../components/Landing';
 const { Header, Content, Sider } = Layout;
 
 const Dashboard = () => {
-  const network = "polygon";
-
   const [messageApi, contextHolder] = message.useMessage();
 
+  const [network, setNetwork] = useState("");
   const [walletAddress, setWalletAddress] = useState();
   const [balance, setBalance] = useState();
   const [safeAuth, setSafeAuth] = useState();
@@ -44,8 +43,8 @@ const Dashboard = () => {
   const [enterOwners, setEnterOwners] = useState([]);
 
   useEffect(() => {
-    createInstanceAuth();
-  }, [])
+    if(network) createInstanceAuth();
+  }, [network])
 
   const createInstanceAuth = async () => {
     // https://web3auth.io/docs/sdk/web/modal/initialize#arguments
@@ -54,9 +53,9 @@ const Dashboard = () => {
       web3AuthNetwork: 'testnet',
       chainConfig: {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
-        chainId: NETWORK[network].chainId,
+        chainId: NETWORK[network]?.chainId,
         // https://chainlist.org/
-        rpcTarget: NETWORK[network].rpc
+        rpcTarget: NETWORK[network]?.rpc
       },
       uiConfig: {
         theme: 'light',
@@ -102,7 +101,7 @@ const Dashboard = () => {
   }
 
   const logout = async () => {
-    await logoutSafe(safeAuth);
+    //await logoutSafe(safeAuth);
     setProvider(null);
     setWalletAddress(null);
   }
@@ -126,9 +125,9 @@ const Dashboard = () => {
         <Typography.Title level={2}>
           Overview
         </Typography.Title>
-        <Tag color="purple" style={{ marginBottom: '1rem' }}>{NETWORK[network].networkName}</Tag>
+        <Tag color="purple" style={{ marginBottom: '1rem' }}>{NETWORK[network]?.networkName}</Tag>
         <p>{walletAddress}</p>
-        <p>{balance / 10 ** 18} {NETWORK[network].tokenSymbol}</p>
+        <p>{balance / 10 ** 18} {NETWORK[network]?.tokenSymbol}</p>
         {/* <Button onClick={() => createUserWalletToPB("")} type="primary" style={{ marginBottom: '2rem' }}>
           Add Fund
         </Button> */}
@@ -230,7 +229,7 @@ const Dashboard = () => {
   return (
     <>
       { !walletAddress
-        ? <Landing login={login} />
+        ? <Landing login={login} network={network} setNetwork={setNetwork} />
         : <Layout>
           <Header className="header" style={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h1>Welcome</h1>

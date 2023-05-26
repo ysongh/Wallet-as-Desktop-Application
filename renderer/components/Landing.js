@@ -12,14 +12,11 @@ const NETWORK_LIST = [
   },
 ]
 
-const Home = ({ login }) => {
-  const [networkName, setNetworkName] = useState(null);
+const Home = ({ login, network, setNetwork }) => {
 
   const handleChange = (value) => {
-    setNetworkName(value);
-  };
-
-  console.log(networkName);
+    setNetwork(value);
+  }
 
   return (
     <center>
@@ -36,7 +33,7 @@ const Home = ({ login }) => {
       />
       <br />
       <br />
-      <Button onClick={login} type="primary" size='large' disabled={!networkName}>
+      <Button onClick={login} type="primary" size='large' disabled={!network}>
         Login
       </Button>
     </center>
