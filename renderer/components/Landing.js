@@ -7,6 +7,10 @@ const NETWORK_LIST = [
     label: 'Polygon Mumbai',
   },
   {
+    value: 'chiado',
+    label: 'Chiado Testnet',
+  },
+  {
     value: 'mandala',
     label: 'Mandala Testnet',
   },

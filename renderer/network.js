@@ -7,6 +7,12 @@ export const NETWORK = {
     "networkName": "Polygon Testnet",
     "tokenSymbol": "MATIC"
   },
+  "chiado": {
+    "chainId": "0x27d8",
+    "rpc": "https://rpc.chiadochain.net",
+    "networkName": "Chiado Testnet",
+    "tokenSymbol": "Chiado xDai"
+  },
   "mandala": {
     "chainId": "0x253",
     "rpc": "https://eth-rpc-mandala.aca-staging.network",
