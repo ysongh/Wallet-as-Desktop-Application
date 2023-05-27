@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Layout, Menu, Button, Form, Input, Typography, Steps, Tag, message } from 'antd';
+import { Layout, Menu, Button, Typography, Tag, message } from 'antd';
 import { SafeAuthKit, Web3AuthModalPack } from '@safe-global/auth-kit'
 import { CHAIN_NAMESPACES } from '@web3auth/base';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 
-import { stepsItems } from '../utils/antdesign';
 import { loginSafe, logoutSafe } from '../utils/auth';
-import { createSafe, getSafe, createSafeTransaction } from '../utils/safe';
 import { createUserWalletCollection, createUserWalletToPB, getSafesByUserFromPB, addSafeToPB } from '../utils/polybase';
 import { initializingSuperfluid } from '../utils/superfluid';
 import { WEB3AUTH_CLIENT_ID } from '../keys';
@@ -19,6 +17,7 @@ import Transaction from '../components/Transaction';
 import Safe from '../components/Safe';
 import Streaming from '../components/Streaming';
 import Landing from '../components/Landing';
+import CreateSafe from '../components/create-safe/CreateSafe';
 
 const { Header, Content, Sider } = Layout;
 
@@ -37,10 +36,6 @@ const Dashboard = () => {
   const [sfSdk, setSfSdk] = useState(null);
   
   const [currentTab, setCurrentTab] = useState("Overview");
-  const [currentStep, setCurrentStep] = useState(0);
-  const [to, setTo] = useState();
-  const [amount, setAmount] = useState();
-  const [enterOwners, setEnterOwners] = useState([]);
 
   useEffect(() => {
     if(network) createInstanceAuth();
@@ -106,19 +101,6 @@ const Dashboard = () => {
     setWalletAddress(null);
   }
 
-  const makeSafe = async () => {
-    const { sSdk, sAddress} = await createSafe(signer, amount, enterOwners, messageApi);
-    setSafeSdk(sSdk);
-    setSafeAddress(sAddress);
-    await addSafeToPB(walletAddress, sAddress);
-    setCurrentTab("Safe");
-  }
-
-  const handleAddOwner = async () => {
-    setEnterOwners([...enterOwners, to]);
-    setTo("");
-  }
-
   const Overview = () => {
     return (
       <div id='stripe-root'>
@@ -131,97 +113,6 @@ const Dashboard = () => {
         {/* <Button onClick={() => createUserWalletToPB("")} type="primary" style={{ marginBottom: '2rem' }}>
           Add Fund
         </Button> */}
-      </div>
-    )
-  }
-
-  const CreateSafe = () => {
-    return (
-      <>
-        <Typography.Title level={2}>
-          Create Safe
-        </Typography.Title>
-        <Steps current={currentStep} items={stepsItems} />
-        {currentStep === 0 && <Step1 />}
-        {currentStep === 1 && <Step2 />}
-        {currentStep === 2 && <Step3 />}
-      </>
-    )
-  }
-
-  const Step1 = () => {
-    return (
-      <div style={{ marginTop: '1rem'}}>
-        <Typography.Title level={4}>
-          Add number of owners
-        </Typography.Title>
-        {enterOwners.map((o, index) => (
-          <p key={index}>
-            {index + 1} -
-            <Tag color="cyan">
-              {o}
-            </Tag>
-          </p>
-        ))}
-        <Form.Item label="Signer">
-          <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)} />
-        </Form.Item>
-        <Button onClick={handleAddOwner} type="primary">
-          Add
-        </Button>
-        <Button onClick={() => setCurrentStep(currentStep + 1)} type="primary">
-          Next
-        </Button>
-      </div>
-    )
-  }
-
-  const Step2 = () => {
-    return (
-      <div style={{ marginTop: '1rem'}}>
-        <Typography.Title level={4}>
-          Threshold
-        </Typography.Title>
-        
-        <Form.Item label="Threshold">
-          <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
-        </Form.Item>
-
-        <Button onClick={() => setCurrentStep(currentStep + 1)} type="primary">
-          Next
-        </Button>
-        <Button onClick={() => setCurrentStep(currentStep + 1)} type="primary">
-          Back
-        </Button>
-      </div>
-    )
-  }
-
-  const Step3 = () => {
-    return (
-      <div style={{ marginTop: '1rem'}}>
-        <Typography.Title level={4}>
-          Number of Signers
-        </Typography.Title>
-        {enterOwners.map((o, index) => (
-          <p key={index}>
-            {index + 1} -
-            <Tag color="cyan">
-              {o}
-            </Tag>
-          </p>
-        ))}
-
-        <Typography.Title level={4}>
-          Threshold - {amount}
-        </Typography.Title>
-
-        <Button onClick={makeSafe} type="primary">
-          Create
-        </Button>
-        <Button onClick={() => setCurrentStep(currentStep - 1)} type="primary">
-          Back
-        </Button>
       </div>
     )
   }
@@ -276,8 +167,8 @@ const Dashboard = () => {
                 {currentTab === "Receive" && <Receive walletAddress={walletAddress} />}
                 {currentTab === "Transaction" && <Transaction />}
                 {currentTab === "Streaming" && <Streaming sfSdk={sfSdk} signer={signer} walletAddress={walletAddress} messageApi={messageApi} />}
-                {currentTab === "Safe" && <Safe signer={signer} userData={userData} network={network} messageApi={messageApi}/>}
-                {currentTab === "CreateSafe" && <CreateSafe />}
+                {currentTab === "Safe" && <Safe signer={signer} userData={userData} network={network} setCurrentTab={setCurrentTab} messageApi={messageApi}/>}
+                {currentTab === "CreateSafe" && <CreateSafe signer={signer} walletAddress={walletAddress} setSafeSdk={setSafeSdk} setCurrentTab={setCurrentTab} messageApi={messageApi} setSafeAddress={setSafeAddress} />}
               </Content>
             </Layout>
           </Layout>

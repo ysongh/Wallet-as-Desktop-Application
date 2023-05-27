@@ -6,7 +6,7 @@ import { NETWORK } from '../network';
 
 import SafeTransferForm from '../components/SafeTransferForm';
 
-const Safe = ({ walletAddress, userData, signer, network, messageApi }) => {
+const Safe = ({ walletAddress, userData, signer, network, setCurrentTab, messageApi }) => {
   const [enterSafeAddress, setEnterSafeAddress] = useState();
   const [safeBalance, setSafeBalance] = useState(0);
   const [safeAddress, setSafeAddress] = useState();
