@@ -23,7 +23,7 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer, network }) =
   const handleSubmit = async() => {
     try {
       setLoading(true);
-      const tx = await sendETH(to, amount, walletAddress, signer, messageApi);
+      const tx = await sendETH(to, amount, walletAddress, signer, messageApi, network);
       await addTransactionToPB(tx.transactionHash, tx.from, tx.to, amount, tx.blockNumber.toString(), "Send", NETWORK[network].tokenSymbol);
       setLoading(false);
     } catch (error) {

@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { NETWORK } from '../network';
 
 export const loginSafe = async (safeAuth) => {
   try{
@@ -30,8 +31,8 @@ export const logoutSafe = async (safeAuth) => {
   }
 }
 
-export const sendETH = async (to, amount, walletAddress, signer, messageApi) => {
-  const connection = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/");
+export const sendETH = async (to, amount, walletAddress, signer, messageApi, network) => {
+  const connection = new ethers.providers.JsonRpcProvider(NETWORK[network].rpc);
   const gasPrice = await connection.getGasPrice();
   
   const tx = {

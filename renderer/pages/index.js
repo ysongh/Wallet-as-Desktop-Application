@@ -42,6 +42,7 @@ const Dashboard = () => {
   }, [network])
 
   const createInstanceAuth = async () => {
+    console.log(network)
     // https://web3auth.io/docs/sdk/web/modal/initialize#arguments
     const options = {
       clientId: WEB3AUTH_CLIENT_ID,
