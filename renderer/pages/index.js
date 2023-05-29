@@ -92,8 +92,10 @@ const Dashboard = () => {
     setBalance(ethbalance);
     const data = await getSafesByUserFromPB(address);
     setUserData(data);
-    const sf = await initializingSuperfluid(userSigner);
-    setSfSdk(sf);
+    if (network === "polygon") {
+      const sf = await initializingSuperfluid(userSigner);
+      setSfSdk(sf);
+    }
   }
 
   const logout = async () => {
@@ -144,9 +146,9 @@ const Dashboard = () => {
                 <Menu.Item key="Receive">
                   Receive
                 </Menu.Item>
-                <Menu.Item key="Streaming">
+                {network === "polygon" && <Menu.Item key="Streaming">
                   Streaming
-                </Menu.Item>
+                </Menu.Item>}
                 <Menu.Item key="Transaction">
                   Transaction
                 </Menu.Item>
