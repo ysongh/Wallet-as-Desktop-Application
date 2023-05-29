@@ -35,9 +35,9 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer, network }) =
   return (
     <div>
       <Typography.Title level={2}>
-        Transfer MATIC
+        Transfer {NETWORK[network].tokenSymbol}
       </Typography.Title>
-      <p>Balance {balance / 10 ** 18} MATIC</p>
+      <p>Balance {balance / 10 ** 18} {NETWORK[network].tokenSymbol}</p>
       <Form layout="vertical" >
         <Form.Item label="To">
           <Input placeholder="0x0" value={to} onChange={(e) => setTo(e.target.value)} />
@@ -46,7 +46,7 @@ const TransferForm = ({ balance, walletAddress, messageApi, signer, network }) =
           <Input placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)}/>
         </Form.Item>
 
-        {gas && <p>Fee: {gas / 10 ** 15} MATIC</p>}
+        {gas && <p>Fee: {gas / 10 ** 15} {NETWORK[network].tokenSymbol}</p>}
         
         <Button onClick={handleSubmit} type="primary" disabled={!to || !amount} loading={loading}>
           Send
