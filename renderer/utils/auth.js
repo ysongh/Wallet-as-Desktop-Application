@@ -52,7 +52,7 @@ export const sendETH = async (to, amount, walletAddress, signer, messageApi, net
   
   messageApi.open({
     type: 'success',
-    content: `Send ${amount} MATIC success`,
+    content: `Send ${amount} ${NETWORK[network].tokenSymbol} success`,
     duration: 20,
   });
 

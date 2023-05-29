@@ -3,7 +3,7 @@ import { Button, Form, Input, Typography } from 'antd';
 
 import { getGasPrice, sendETH } from '../utils/auth';
 import { addTransactionToPB } from '../utils/polybase';
-import { getBalance } from '../utils/gatewayapi';
+import { getBalance, getGasFee } from '../utils/gatewayapi';
 import { NETWORK } from '../network';
 
 const TransferForm = ({ walletAddress, messageApi, signer, network }) => {
@@ -19,8 +19,8 @@ const TransferForm = ({ walletAddress, messageApi, signer, network }) => {
   }, [])
   
   const findGasPrice = async() => {
-    const price = await getGasPrice();
-    setGas(price.toString());
+    const price = await getGasFee();
+    setGas(price);
   }
 
   const findBalance = async() => {

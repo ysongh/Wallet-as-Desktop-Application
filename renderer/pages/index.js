@@ -99,7 +99,7 @@ const Dashboard = () => {
   }
 
   const logout = async () => {
-    //await logoutSafe(safeAuth);
+    await logoutSafe(safeAuth);
     setProvider(null);
     setWalletAddress(null);
   }
