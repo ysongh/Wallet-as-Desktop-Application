@@ -12,11 +12,5 @@ export const NETWORK = {
     "rpc": "https://rpc.eu-central-2.gateway.fm/v4/gnosis/archival/chiado",
     "networkName": "Chiado Testnet",
     "tokenSymbol": "Chiado xDai"
-  },
-  "mandala": {
-    "chainId": "0x253",
-    "rpc": "https://eth-rpc-mandala.aca-staging.network",
-    "networkName": "Mandala Testnet",
-    "tokenSymbol": "mACA"
   }
 }

@@ -9,11 +9,7 @@ const NETWORK_LIST = [
   {
     value: 'chiado',
     label: 'Chiado Testnet',
-  },
-  {
-    value: 'mandala',
-    label: 'Mandala Testnet',
-  },
+  }
 ]
 
 const Home = ({ login, network, setNetwork }) => {
