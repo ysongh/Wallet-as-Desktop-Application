@@ -2,7 +2,7 @@
   "name": "wallet-as-desktop-application",
   "version": "0.1.0",
   "private": true,
-  "productName": "Wallet as Desktop Application",
+  "productName": "Desktop Safe Wallet",
   "main": "main/index.js",
   "scripts": {
     "clean": "rimraf dist renderer/.next renderer/out",
