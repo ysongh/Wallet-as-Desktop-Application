@@ -11,6 +11,7 @@ import { WEB3AUTH_CLIENT_ID } from '../keys';
 import { NETWORK } from '../network';
 
 import 'antd/dist/reset.css';
+import Navbar from '../components/Navbar';
 import Receive from '../components/Receive';
 import TransferForm from '../components/TransferForm';
 import Transaction from '../components/Transaction';
@@ -19,7 +20,7 @@ import Streaming from '../components/Streaming';
 import Landing from '../components/Landing';
 import CreateSafe from '../components/create-safe/CreateSafe';
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const Dashboard = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -125,10 +126,7 @@ const Dashboard = () => {
       { !walletAddress
         ? <Landing login={login} network={network} setNetwork={setNetwork} />
         : <Layout>
-          <Header className="header" style={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h1>Welcome</h1>
-            <Button onClick={logout} type="primary">Logout</Button>
-          </Header>
+          <Navbar logout={logout} />
           <Layout>
             <Sider width={150} style={{ backgroundColor: 'white' }}>
               <Menu
