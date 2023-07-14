@@ -126,7 +126,7 @@ const Dashboard = () => {
       { !walletAddress
         ? <Landing login={login} network={network} setNetwork={setNetwork} />
         : <Layout>
-          <Navbar logout={logout} />
+          <Navbar logout={logout} networkName={NETWORK[network]?.networkName} />
           <Layout>
             <Sider width={150} style={{ backgroundColor: 'white' }}>
               <Menu
