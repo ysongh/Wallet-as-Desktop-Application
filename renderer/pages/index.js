@@ -111,8 +111,8 @@ const Dashboard = () => {
         <Typography.Title level={2}>
           Overview
         </Typography.Title>
-        <Tag color="purple" style={{ marginBottom: '1rem' }}>{NETWORK[network]?.networkName}</Tag>
         <a href={`${NETWORK[network]?.explorer}/address/${walletAddress}`} target="_blank" rel="noopener noreferrer">{walletAddress}</a>
+        <div style={{ marginBottom: "1rem" }}></div>
         <p>{balance / 10 ** 18} {NETWORK[network]?.tokenSymbol}</p>
         {/* <Button onClick={() => createUserWalletToPB("")} type="primary" style={{ marginBottom: '2rem' }}>
           Add Fund
